@@ -1,0 +1,31 @@
+# Gitignore for Astronomy Dashboard
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+*~
+*.bak
+*.swp
+*.swo
+
+# Node.js dependencies (if any were to be added later)
+node_modules/
+
+# Build artifacts (if any were to be added later)
+build/
+dist/
+
+# Log files
+*.log
+
+# Environment variables
+.env
+.env.local
