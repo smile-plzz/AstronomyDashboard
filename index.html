@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astronomy Dashboard</title>
+    <style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    color: #333;
+    transition: background-color 0.4s ease, color 0.4s ease;
+    line-height: 1.6;
+}
+
+body.dark-mode {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+}
+
+header {
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+}
+
+main {
+    padding: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+section {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    padding: 2rem;
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+body.dark-mode section {
+    background-color: #16213e;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+h2 {
+    color: #34495e;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+}
+
+body.dark-mode h2 {
+    color: #e0e0e0;
+    border-bottom-color: #334a6d;
+}
+
+h3 {
+    color: #2980b9;
+    font-size: 1.4rem;
+    margin-top: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+body.dark-mode h3 {
+    color: #7ddffc;
+}
+
+#apod img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.5rem auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+body.dark-mode button {
+    background-color: #0f3460;
+}
+
+body.dark-mode button:hover {
+    background-color: #1a527f;
+}
+
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    background-color: #ecf0f1;
+    border-top: 1px solid #e0e0e0;
+}
+
+body.dark-mode footer {
+    color: #a0a0a0;
+    background-color: #0f3460;
+    border-top-color: #2c3e50;
+}
+
+#favoritesList.collapsed {
+    display: none;
+}
+
+.favorite-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s ease;
+}
+
+body.dark-mode .favorite-item {
+    border-color: #334a6d;
+    background-color: #223a5e;
+}
+
+.favorite-item:hover {
+    background-color: #eef;
+}
+
+body.dark-mode .favorite-item:hover {
+    background-color: #2a476e;
+}
+
+.favorite-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 15px;
+    border-radius: 4px;
+}
+
+.favorite-item p {
+    margin: 0;
+    flex-grow: 1;
+    color: #555;
+}
+
+body.dark-mode .favorite-item p {
+    color: #c0c0c0;
+}
+
+.favorite-item button {
+    margin-left: auto;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    background-color: #e74c3c;
+}
+
+.favorite-item button:hover {
+    background-color: #c0392b;
+}
+
+#offline-banner {
+    background-color: #f39c12;
+    color: #fff;
+    text-align: center;
+    padding: 12px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: none; /* Hidden by default */
+    z-index: 1000;
+    font-weight: bold;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#celestial-events ul {
+    list-style: none;
+    padding: 0;
+}
+
+#celestial-events li {
+    background-color: #ecf0f1;
+    margin-bottom: 10px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border-left: 5px solid #3498db;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+body.dark-mode #celestial-events li {
+    background-color: #2c3e50;
+    border-left-color: #7ddffc;
+}
+
+#celestial-events li.past-event {
+    opacity: 0.6;
+    border-left-color: #95a5a6;
+}
+
+#celestial-events li span {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+body.dark-mode #celestial-events li span {
+    color: #e0e0e0;
+}
+
+#celestial-events .event-date {
+    font-size: 0.9em;
+    color: #7f8c8d;
+}
+
+body.dark-mode #celestial-events .event-date {
+    color: #a0a0a0;
+}
+
+#star-chart-display {
+    width: 100%;
+    height: 300px;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+#star-chart-display img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+}
+
+#star-chart-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+#manual-location input[type="number"] {
+    padding: 0.6rem;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 120px;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+body.dark-mode #manual-location input[type="number"] {
+    background-color: #2c3e50;
+    border-color: #334a6d;
+    color: #e0e0e0;
+}
+
+#manual-location label {
+    margin-right: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+body.dark-mode #manual-location label {
+    color: #c0c0c0;
+}
+
+#locationStatus, #manualLocationStatus {
+    margin-top: 10px;
+    font-style: italic;
+    color: #666;
+}
+
+body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
+    color: #a0a0a0;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    h2 {
+        font-size: 1.6rem;
+    }
+    section {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    button {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    #manual-location input[type="number"] {
+        width: 100px;
+        margin-bottom: 10px;
+    }
+    #manual-location label {
+        display: block;
+        margin-bottom: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    h2 {
+        font-size: 1.4rem;
+    }
+    main {
+        padding: 1rem;
+    }
+    section {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    button {
+        width: 100%;
+        margin-right: 0;
+    }
+    #manual-location input[type="number"] {
+        width: calc(100% - 22px); /* Account for padding and border */
+        margin-right: 0;
+    }
+    #star-chart-controls button {
+        width: auto;
+    }
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Astronomy Dashboard</h1>
+        <button id="darkModeToggle">Toggle Dark Mode</button>
+    </header>
+    <main>
+        <section id="apod">
+            <h2>Astronomy Picture of the Day</h2>
+            <h3 id="apodTitle"></h3>
+            <img id="apodImage" src="" alt="Astronomy Picture of the Day">
+            <p id="apodDescription"></p>
+        </section>
+        <section id="iss-location">
+            <h2>International Space Station (ISS) Location</h2>
+            <p>Latitude: <span id="issLat"></span></p>
+            <p>Longitude: <span id="issLon"></span></p>
+        </section>
+        <section id="moon-phase">
+            <h2>Current Moon Phase</h2>
+            <p id="moonPhaseText"></p>
+        </section>
+        <section id="user-location">
+            <h2>Your Location</h2>
+            <p>Latitude: <span id="userLat">N/A</span></p>
+            <p>Longitude: <span id="userLon">N/A</span></p>
+            <p id="locationStatus"></p>
+        </section>
+        <section id="celestial-events">
+            <h2>Upcoming Celestial Events</h2>
+            <ul id="eventsList">
+                <li>**Quadrantids Meteor Shower**: January 3-4, 2025</li>
+                <li>**Total Lunar Eclipse**: March 14, 2025</li>
+                <li>**Partial Solar Eclipse**: March 29, 2025</li>
+                <li>**Lyrid Meteor Shower**: April 22-23, 2025</li>
+                <li>**Eta Aquariids Meteor Shower**: May 6-7, 2025</li>
+            </ul>
+        </section>
+        <section id="favorites">
+            <h2>Your Favorites <button id="toggleFavorites">Show/Hide</button></h2>
+            <div id="favoritesList" class="collapsed">
+                <p>No favorites saved yet.</p>
+            </div>
+        </section>
+        <section id="manual-location">
+            <h2>Manual Location Input</h2>
+            <label for="manualLat">Latitude:</label>
+            <input type="number" id="manualLat" placeholder="e.g., 34.05" step="0.01">
+            <label for="manualLon">Longitude:</label>
+            <input type="number" id="manualLon" placeholder="e.g., -118.25" step="0.01">
+            <button id="saveLocation">Save Location</button>
+            <p id="manualLocationStatus"></p>
+        </section>
+        <section id="star-chart">
+            <h2>Interactive Star Chart</h2>
+            <div id="star-chart-display">Star Chart Placeholder</div>
+            <div id="star-chart-controls">
+                <button id="zoomIn">Zoom In</button>
+                <button id="zoomOut">Zoom Out</button>
+                <button id="panLeft">Pan Left</button>
+                <button id="panRight">Pan Right</button>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Astronomy Dashboard</p>
+    </footer>
+
+    <div id="offline-banner">You are currently offline. Some features may be limited.</div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const NASA_API_KEY = 'tIrqLSEdCCAzLNSihVNlIKqhiFhHW3gZIWD5cUXj';
+    const APOD_URL = `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`;
+    const ISS_URL = 'http://api.open-notify.org/iss-now.json';
+    const CACHE_NAME = 'astronomy-dashboard-cache-v1';
+
+    // Dark Mode Toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const enableDarkMode = localStorage.getItem('darkMode') === 'enabled';
+
+    if (enableDarkMode) {
+        document.body.classList.add('dark-mode');
+    }
+
+    darkModeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('darkMode', 'enabled');
+        } else {
+            localStorage.setItem('darkMode', 'disabled');
+        }
+    });
+
+    // Fetch APOD with caching
+    async function fetchApod() {
+        try {
+            const response = await fetch(APOD_URL);
+            const data = await response.json();
+            document.getElementById('apodTitle').textContent = data.title;
+            document.getElementById('apodImage').src = data.url;
+            document.getElementById('apodImage').alt = data.title;
+            document.getElementById('apodDescription').textContent = data.explanation;
+
+            // Cache APOD data
+            const cache = await caches.open(CACHE_NAME);
+            await cache.put(APOD_URL, new Response(JSON.stringify(data)));
+
+            // Add to favorites button
+            const favoriteButton = document.createElement('button');
+            favoriteButton.textContent = 'Add to Favorites';
+            favoriteButton.onclick = () => {
+                let favorites = JSON.parse(localStorage.getItem('apodFavorites') || '[]');
+                const newFavorite = { title: data.title, url: data.url, date: data.date };
+                if (!favorites.some(fav => fav.date === newFavorite.date)) {
+                    favorites.push(newFavorite);
+                    localStorage.setItem('apodFavorites', JSON.stringify(favorites));
+                    renderFavorites();
+                    alert('Added to favorites!');
+                } else {
+                    alert('This image is already in your favorites.');
+                }
+            };
+            document.getElementById('apod').appendChild(favoriteButton);
+
+            // Social Sharing Button
+            const shareButton = document.createElement('button');
+            shareButton.textContent = 'Share APOD';
+            shareButton.onclick = async () => {
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: data.title,
+                            url: data.url,
+                        });
+                        console.log('APOD shared successfully');
+                    } catch (error) {
+                        console.error('Error sharing APOD:', error);
+                    }
+                } else {
+                    // Fallback for browsers that do not support Web Share API
+                    navigator.clipboard.writeText(data.url).then(() => {
+                        alert('APOD URL copied to clipboard!');
+                    }).catch(err => {
+                        console.error('Could not copy text: ', err);
+                    });
+                }
+            };
+            document.getElementById('apod').appendChild(shareButton);
+
+        } catch (error) {
+            console.error('Error fetching APOD:', error);
+            // Try to load from cache if offline
+            const cache = await caches.open(CACHE_NAME);
+            const cachedResponse = await cache.match(APOD_URL);
+            if (cachedResponse) {
+                const data = await cachedResponse.json();
+                document.getElementById('apodTitle').textContent = `(Offline) ${data.title}`;
+                document.getElementById('apodImage').src = data.url;
+                document.getElementById('apodImage').alt = data.title;
+                document.getElementById('apodDescription').textContent = `(Offline) ${data.explanation}`;
+            } else {
+                document.getElementById('apodTitle').textContent = 'Failed to load APOD';
+                document.getElementById('apodDescription').textContent = 'Please check your internet connection.';
+            }
+        }
+    }
+    fetchApod();
+
+    // Fetch ISS Location with caching
+    async function fetchIssLocation() {
+        try {
+            const response = await fetch(ISS_URL);
+            const data = await response.json();
+            document.getElementById('issLat').textContent = data.iss_position.latitude;
+            document.getElementById('issLon').textContent = data.iss_position.longitude;
+
+            // Cache ISS data
+            const cache = await caches.open(CACHE_NAME);
+            await cache.put(ISS_URL, new Response(JSON.stringify(data)));
+
+        } catch (error) {
+            console.error('Error fetching ISS location:', error);
+            // Try to load from cache if offline
+            const cache = await caches.open(CACHE_NAME);
+            const cachedResponse = await cache.match(ISS_URL);
+            if (cachedResponse) {
+                const data = await cachedResponse.json();
+                document.getElementById('issLat').textContent = `(Offline) ${data.iss_position.latitude}`;
+                document.getElementById('issLon').textContent = `(Offline) ${data.iss_position.longitude}`;
+            } else {
+                document.getElementById('issLat').textContent = 'N/A';
+                document.getElementById('issLon').textContent = 'N/A';
+            }
+        }
+    }
+
+    fetchIssLocation();
+    setInterval(fetchIssLocation, 5000); // Update every 5 seconds
+
+    // Moon Phase Calculation (simplified)
+    function calculateMoonPhase() {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // Month is 0-indexed
+        const day = date.getDate();
+
+        let lp = 29.530588;
+        let new_moon = new Date(2000, 0, 6, 18, 30, 0); // New moon on Jan 6, 2000, 18:30 UT
+        let phase = ((date.getTime() - new_moon.getTime()) / (1000 * 60 * 60 * 24)) % lp;
+
+        let phaseText = '';
+        if (phase < 1.84566) phaseText = 'New Moon';
+        else if (phase < 5.53699) phaseText = 'Waxing Crescent';
+        else if (phase < 9.22831) phaseText = 'First Quarter';
+        else if (phase < 12.91963) phaseText = 'Waxing Gibbous';
+        else if (phase < 16.61096) phaseText = 'Full Moon';
+        else if (phase < 20.30228) phaseText = 'Waning Gibbous';
+        else if (phase < 23.99361) phaseText = 'Last Quarter';
+        else if (phase < 27.68493) phaseText = 'Waning Crescent';
+        else phaseText = 'New Moon';
+
+        document.getElementById('moonPhaseText').textContent = phaseText;
+    }
+
+    calculateMoonPhase();
+
+    // User Location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                document.getElementById('userLat').textContent = position.coords.latitude.toFixed(2);
+                document.getElementById('userLon').textContent = position.coords.longitude.toFixed(2);
+                document.getElementById('locationStatus').textContent = 'Location retrieved successfully.';
+                // Update manual location inputs with geo-located values
+                document.getElementById('manualLat').value = position.coords.latitude.toFixed(2);
+                document.getElementById('manualLon').value = position.coords.longitude.toFixed(2);
+            },
+            (error) => {
+                document.getElementById('locationStatus').textContent = `Error getting location: ${error.message}`;
+                console.error('Error getting user location:', error);
+            }
+        );
+    } else {
+        document.getElementById('locationStatus').textContent = 'Geolocation is not supported by your browser.';
+    }
+
+    // Favorites Collapsible List
+    const toggleFavoritesButton = document.getElementById('toggleFavorites');
+    const favoritesListDiv = document.getElementById('favoritesList');
+
+    toggleFavoritesButton.addEventListener('click', () => {
+        favoritesListDiv.classList.toggle('collapsed');
+        if (favoritesListDiv.classList.contains('collapsed')) {
+            toggleFavoritesButton.textContent = 'Show/Hide';
+        } else {
+            toggleFavoritesButton.textContent = 'Hide';
+        }
+    });
+
+    // Favorites
+    function renderFavorites() {
+        const favorites = JSON.parse(localStorage.getItem('apodFavorites') || '[]');
+        const favoritesList = document.getElementById('favoritesList');
+        favoritesList.innerHTML = '';
+        if (favorites.length === 0) {
+            favoritesList.innerHTML = '<p>No favorites saved yet.</p>';
+            return;
+        }
+        favorites.forEach((fav, index) => {
+            const favItem = document.createElement('div');
+            favItem.classList.add('favorite-item');
+            favItem.innerHTML = `
+                <img src="${fav.url}" alt="${fav.title}" style="width: 100px; height: 100px; object-fit: cover;">
+                <p>${fav.title} (${fav.date})</p>
+                <button class="delete-favorite" data-index="${index}">Delete</button>
+            `;
+            favoritesList.appendChild(favItem);
+        });
+
+        document.querySelectorAll('.delete-favorite').forEach(button => {
+            button.onclick = (event) => {
+                const indexToDelete = event.target.dataset.index;
+                let favorites = JSON.parse(localStorage.getItem('apodFavorites') || '[]');
+                favorites.splice(indexToDelete, 1);
+                localStorage.setItem('apodFavorites', JSON.stringify(favorites));
+                renderFavorites();
+            };
+        });
+    }
+    renderFavorites();
+
+    // Manual Location Input
+    const saveLocationButton = document.getElementById('saveLocation');
+    saveLocationButton.addEventListener('click', () => {
+        const manualLat = document.getElementById('manualLat').value;
+        const manualLon = document.getElementById('manualLon').value;
+
+        if (manualLat && manualLon) {
+            localStorage.setItem('manualLat', manualLat);
+            localStorage.setItem('manualLon', manualLon);
+            document.getElementById('manualLocationStatus').textContent = 'Manual location saved!';
+            document.getElementById('userLat').textContent = parseFloat(manualLat).toFixed(2);
+            document.getElementById('userLon').textContent = parseFloat(manualLon).toFixed(2);
+        } else {
+            document.getElementById('manualLocationStatus').textContent = 'Please enter both latitude and longitude.';
+        }
+    });
+
+    // Load manual location if available
+    const savedLat = localStorage.getItem('manualLat');
+    const savedLon = localStorage.getItem('manualLon');
+    if (savedLat && savedLon) {
+        document.getElementById('userLat').textContent = parseFloat(savedLat).toFixed(2);
+        document.getElementById('userLon').textContent = parseFloat(savedLon).toFixed(2);
+        document.getElementById('locationStatus').textContent = 'Using saved manual location.';
+        document.getElementById('manualLat').value = savedLat;
+        document.getElementById('manualLon').value = savedLon;
+    }
+
+    // Offline Mode Banner
+    const offlineBanner = document.getElementById('offline-banner');
+
+    function updateOnlineStatus() {
+        if (navigator.onLine) {
+            offlineBanner.style.display = 'none';
+        } else {
+            offlineBanner.style.display = 'block';
+        }
+    }
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+
+    updateOnlineStatus(); // Initial check
+
+    // Celestial Events (more dynamic)
+    const celestialEvents = [
+        { name: 'Quadrantids Meteor Shower', date: '2025-01-03' },
+        { name: 'Total Lunar Eclipse', date: '2025-03-14' },
+        { name: 'Partial Solar Eclipse', date: '2025-03-29' },
+        { name: 'Lyrid Meteor Shower', date: '2025-04-22' },
+        { name: 'Eta Aquariids Meteor Shower', date: '2025-05-06' },
+        { name: 'Perseid Meteor Shower', date: '2025-08-12' },
+        { name: 'Orionid Meteor Shower', date: '2025-10-21' },
+        { name: 'Geminid Meteor Shower', date: '2025-12-14' },
+    ];
+
+    function renderCelestialEvents() {
+        const eventsList = document.getElementById('eventsList');
+        eventsList.innerHTML = '';
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        celestialEvents.forEach(event => {
+            const eventDate = new Date(event.date);
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <span>${event.name}</span>
+                <span class="event-date">${eventDate.toDateString()}</span>
+            `;
+            if (eventDate < today) {
+                listItem.classList.add('past-event');
+            }
+            eventsList.appendChild(listItem);
+        });
+    }
+    renderCelestialEvents();
+
+    // Basic Star Chart Interactivity
+    const starChartDisplay = document.getElementById('star-chart-display');
+    const zoomInButton = document.getElementById('zoomIn');
+    const zoomOutButton = document.getElementById('zoomOut');
+    const panLeftButton = document.getElementById('panLeft');
+    const panRightButton = document.getElementById('panRight');
+
+    let zoomLevel = 1;
+    let panX = 0;
+    let panY = 0;
+
+    function updateStarChartDisplay() {
+        starChartDisplay.style.backgroundSize = `${100 * zoomLevel}%`;
+        starChartDisplay.style.backgroundPosition = `${panX}% ${panY}%`;
+        starChartDisplay.textContent = `Star Chart: Zoom ${zoomLevel.toFixed(1)}, Pan (${panX.toFixed(0)}%, ${panY.toFixed(0)}%)`;
+    }
+
+    zoomInButton.addEventListener('click', () => {
+        zoomLevel = Math.min(zoomLevel + 0.1, 2);
+        updateStarChartDisplay();
+    });
+
+    zoomOutButton.addEventListener('click', () => {
+        zoomLevel = Math.max(zoomLevel - 0.1, 0.5);
+        updateStarChartDisplay();
+    });
+
+    panLeftButton.addEventListener('click', () => {
+        panX = Math.max(panX - 5, -50);
+        updateStarChartDisplay();
+    });
+
+    panRightButton.addEventListener('click', () => {
+        panX = Math.min(panX + 5, 50);
+        updateStarChartDisplay();
+    });
+
+    // Initial star chart display
+    starChartDisplay.style.backgroundImage = 'url("https://via.placeholder.com/600x300/000000/FFFFFF?text=Star+Chart+Placeholder")';
+    starChartDisplay.style.backgroundRepeat = 'no-repeat';
+    starChartDisplay.style.backgroundPosition = 'center';
+    starChartDisplay.style.backgroundSize = 'cover';
+    updateStarChartDisplay();
+});
+    </script>
+</body>
+</html>
