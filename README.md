@@ -8,13 +8,19 @@ This is a single-page HTML application designed to provide astronomy enthusiasts
 *   **International Space Station (ISS) Location**: Shows the real-time latitude and longitude of the ISS.
 *   **Moon Phase**: Calculates and displays the current moon phase.
 *   **User Location**: Detects user's geographical coordinates (with fallback for manual input).
-*   **Upcoming Celestial Events**: Provides a static list of notable celestial events.
+*   **Upcoming Celestial Events**: Dynamically fetches and displays notable celestial events (Solar Flares, Coronal Mass Ejections).
+*   **Near Earth Objects (NEOs)**: Displays information about potentially hazardous Near Earth Objects.
+*   **NASA Image and Video Library Search**: Allows users to search and view images and videos from NASA's extensive library.
+*   **Interactive Star Chart**: Displays an interactive star chart using `d3-celestial` based on user's location, showing stars, constellations, and other celestial objects.
 *   **Favorites**: Allows users to save their favorite APOD images to local storage and view them in a collapsible list.
-*   **Dark Mode**: Toggles between dark and light themes, with the preference saved locally.
+*   **Dark Mode**: Defaults to dark mode with the option to toggle to light mode, with the preference saved locally.
 *   **Offline Support**: Caches APOD and ISS data for offline viewing.
 *   **Social Sharing**: Enables sharing of APOD images via Web Share API or by copying the URL.
 *   **Responsive UI**: Adapts to various screen sizes (mobile, tablet, desktop).
-*   **Basic Star Chart Interactivity**: Conceptual zoom and pan controls for a placeholder star chart.
+
+## Development Log
+
+For a detailed log of development progress, see [development_log.md](development_log.md).
 
 ## How to Use
 

@@ -292,7 +292,7 @@ body.dark-mode #neoList li p {
 
 #star-chart-display {
     width: 100%;
-    height: 300px;
+    height: 500px; /* Increased height for better visibility */
     background-color: #000;
     color: #fff;
     display: flex;
@@ -303,6 +303,11 @@ body.dark-mode #neoList li p {
     margin-top: 1.5rem;
     position: relative;
     overflow: hidden;
+}
+
+#star-chart-display canvas {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 #star-chart-display img {
@@ -321,6 +326,46 @@ body.dark-mode #neoList li p {
     gap: 10px;
     margin-top: 1rem;
     flex-wrap: wrap;
+}
+
+#roverPhotosContainer, #epicImageContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+#roverPhotosContainer div, #epicImageContainer img {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    width: 180px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+body.dark-mode #roverPhotosContainer div, body.dark-mode #epicImageContainer img {
+    border-color: #334a6d;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+#roverPhotosContainer img, #epicImageContainer img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+#roverPhotosContainer p {
+    font-size: 0.8em;
+    color: #666;
+    margin: 0;
+}
+
+body.dark-mode #roverPhotosContainer p {
+    color: #c0c0c0;
 }
 
 #manual-location input[type="number"] {
@@ -444,11 +489,6 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
         <section id="celestial-events">
             <h2>Upcoming Celestial Events</h2>
             <ul id="eventsList">
-                <li>**Quadrantids Meteor Shower**: January 3-4, 2025</li>
-                <li>**Total Lunar Eclipse**: March 14, 2025</li>
-                <li>**Partial Solar Eclipse**: March 29, 2025</li>
-                <li>**Lyrid Meteor Shower**: April 22-23, 2025</li>
-                <li>**Eta Aquariids Meteor Shower**: May 6-7, 2025</li>
             </ul>
         </section>
 
@@ -459,11 +499,42 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
             </div>
         </section>
 
+        <section id="mars-rover-photos">
+            <h2>Mars Rover Photos</h2>
+            <div id="roverPhotosContainer">
+                <p>Loading Mars Rover photos...</p>
+            </div>
+        </section>
+
+        <section id="epic-images">
+            <h2>Earth Polychromatic Imaging Camera (EPIC) Images</h2>
+            <div id="epicImageContainer">
+                <p>Loading EPIC images...</p>
+            </div>
+        </section>
+
         <section id="astronomy-fact">
             <h2>Astronomy Fact of the Day</h2>
             <p id="factTitle"></p>
             <p id="factDescription"></p>
             <button id="newFactButton">New Fact</button>
+        </section>
+
+        <section id="nasa-image-video-search">
+            <h2>NASA Image and Video Library Search</h2>
+            <input type="text" id="nasaSearchInput" placeholder="Search for images or videos...">
+            <button id="nasaSearchButton">Search</button>
+            <div id="nasaSearchResults"></div>
+        </section>
+
+        <section id="star-chart">
+            <h2>Interactive Star Chart</h2>
+            <div id="star-chart-display">
+                <p>Star chart will appear here.</p>
+            </div>
+            <div id="star-chart-controls">
+                <button id="refreshStarChart">Refresh Star Chart</button>
+            </div>
         </section>
 
 
@@ -492,6 +563,8 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
 
     <div id="offline-banner">You are currently offline. Some features may be limited.</div>
 
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-celestial@0.7.3/celestial.min.js"></script>
     <script>
 document.addEventListener('DOMContentLoaded', () => {
     const NASA_API_KEY = 'tIrqLSEdCCAzLNSihVNlIKqhiFhHW3gZIWD5cUXj';
@@ -501,11 +574,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Dark Mode Toggle
     const darkModeToggle = document.getElementById('darkModeToggle');
-    const enableDarkMode = localStorage.getItem('darkMode') === 'enabled';
+    // Set dark mode as default
+    document.body.classList.add('dark-mode');
+    localStorage.setItem('darkMode', 'enabled');
 
-    if (enableDarkMode) {
-        document.body.classList.add('dark-mode');
-    }
+    
 
     darkModeToggle.addEventListener('click', () => {
         document.body.classList.toggle('dark-mode');
@@ -518,22 +591,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch APOD with caching
     async function fetchApod() {
+        const apodTitle = document.getElementById('apodTitle');
+        const apodImage = document.getElementById('apodImage');
+        const apodDescription = document.getElementById('apodDescription');
+        const apodCopyright = document.getElementById('apodCopyright');
+        const apodSection = document.getElementById('apod');
+
+        apodTitle.textContent = 'Loading Astronomy Picture of the Day...';
+        apodImage.src = '';
+        apodImage.alt = '';
+        apodDescription.textContent = '';
+        apodCopyright.textContent = '';
+
         try {
             const response = await fetch(APOD_URL);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
-            document.getElementById('apodTitle').textContent = data.title;
-            document.getElementById('apodImage').src = data.hdurl || data.url;
-            document.getElementById('apodImage').alt = data.title;
-            document.getElementById('apodDescription').textContent = data.explanation;
-            document.getElementById('apodCopyright').textContent = data.copyright ? `Image Credit: ${data.copyright}` : '';
+
+            apodTitle.textContent = data.title;
+            apodImage.src = data.hdurl || data.url;
+            apodImage.alt = data.title;
+            apodDescription.textContent = data.explanation;
+            apodCopyright.textContent = data.copyright ? `Image Credit: ${data.copyright}` : '';
 
             // Cache APOD data
             const cache = await caches.open(CACHE_NAME);
             await cache.put(APOD_URL, new Response(JSON.stringify(data)));
 
             // Add to favorites button
-            const favoriteButton = document.createElement('button');
-            favoriteButton.textContent = 'Add to Favorites';
+            let favoriteButton = apodSection.querySelector('.favorite-button');
+            if (!favoriteButton) {
+                favoriteButton = document.createElement('button');
+                favoriteButton.textContent = 'Add to Favorites';
+                favoriteButton.classList.add('favorite-button');
+                apodSection.appendChild(favoriteButton);
+            }
             favoriteButton.onclick = () => {
                 let favorites = JSON.parse(localStorage.getItem('apodFavorites') || '[]');
                 const newFavorite = { title: data.title, url: data.url, date: data.date };
@@ -546,11 +640,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('This image is already in your favorites.');
                 }
             };
-            document.getElementById('apod').appendChild(favoriteButton);
 
             // Social Sharing Button
-            const shareButton = document.createElement('button');
-            shareButton.textContent = 'Share APOD';
+            let shareButton = apodSection.querySelector('.share-button');
+            if (!shareButton) {
+                shareButton = document.createElement('button');
+                shareButton.textContent = 'Share APOD';
+                shareButton.classList.add('share-button');
+                apodSection.appendChild(shareButton);
+            }
             shareButton.onclick = async () => {
                 if (navigator.share) {
                     try {
@@ -571,22 +669,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
             };
-            document.getElementById('apod').appendChild(shareButton);
 
         } catch (error) {
             console.error('Error fetching APOD:', error);
+            apodTitle.textContent = 'Failed to load APOD';
+            apodDescription.textContent = `Error: ${error.message}. Please check your internet connection or API key.`;
+            apodImage.src = ''; // Clear image on error
+            apodImage.alt = 'Error loading image';
+
             // Try to load from cache if offline
             const cache = await caches.open(CACHE_NAME);
             const cachedResponse = await cache.match(APOD_URL);
             if (cachedResponse) {
                 const data = await cachedResponse.json();
-                document.getElementById('apodTitle').textContent = `(Offline) ${data.title}`;
-                document.getElementById('apodImage').src = data.url;
-                document.getElementById('apodImage').alt = data.title;
-                document.getElementById('apodDescription').textContent = `(Offline) ${data.explanation}`;
+                apodTitle.textContent = `(Offline) ${data.title}`;
+                apodImage.src = data.url;
+                apodImage.alt = data.title;
+                apodDescription.textContent = `(Offline) ${data.explanation}`;
+                apodCopyright.textContent = data.copyright ? `(Offline) Image Credit: ${data.copyright}` : '';
             } else {
-                document.getElementById('apodTitle').textContent = 'Failed to load APOD';
-                document.getElementById('apodDescription').textContent = 'Please check your internet connection.';
+                apodTitle.textContent = 'Failed to load APOD';
+                apodDescription.textContent = `Error: ${error.message}. No cached data available.`;
             }
         }
     }
@@ -594,11 +697,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch ISS Location with caching
     async function fetchIssLocation() {
+        const issLat = document.getElementById('issLat');
+        const issLon = document.getElementById('issLon');
+
+        issLat.textContent = 'Loading...';
+        issLon.textContent = 'Loading...';
+
         try {
             const response = await fetch(ISS_URL);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
-            document.getElementById('issLat').textContent = data.iss_position.latitude;
-            document.getElementById('issLon').textContent = data.iss_position.longitude;
+            issLat.textContent = data.iss_position.latitude;
+            issLon.textContent = data.iss_position.longitude;
 
             // Cache ISS data
             const cache = await caches.open(CACHE_NAME);
@@ -606,16 +718,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error fetching ISS location:', error);
+            issLat.textContent = 'Error';
+            issLon.textContent = 'Error';
+
             // Try to load from cache if offline
             const cache = await caches.open(CACHE_NAME);
             const cachedResponse = await cache.match(ISS_URL);
             if (cachedResponse) {
                 const data = await cachedResponse.json();
-                document.getElementById('issLat').textContent = `(Offline) ${data.iss_position.latitude}`;
-                document.getElementById('issLon').textContent = `(Offline) ${data.iss_position.longitude}`;
+                issLat.textContent = `(Offline) ${data.iss_position.latitude}`;
+                issLon.textContent = `(Offline) ${data.iss_position.longitude}`;
             } else {
-                document.getElementById('issLat').textContent = 'N/A';
-                document.getElementById('issLon').textContent = 'N/A';
+                issLat.textContent = 'N/A';
+                issLon.textContent = 'N/A';
             }
         }
     }
@@ -760,37 +875,74 @@ document.addEventListener('DOMContentLoaded', () => {
     updateOnlineStatus(); // Initial check
 
     // Celestial Events (more dynamic)
-    const celestialEvents = [
-        { name: 'Quadrantids Meteor Shower', date: '2025-01-03' },
-        { name: 'Total Lunar Eclipse', date: '2025-03-14' },
-        { name: 'Partial Solar Eclipse', date: '2025-03-29' },
-        { name: 'Lyrid Meteor Shower', date: '2025-04-22' },
-        { name: 'Eta Aquariids Meteor Shower', date: '2025-05-06' },
-        { name: 'Perseid Meteor Shower', date: '2025-08-12' },
-        { name: 'Orionid Meteor Shower', date: '2025-10-21' },
-        { name: 'Geminid Meteor Shower', date: '2025-12-14' },
-    ];
+    const celestialEvents = [];
 
-    function renderCelestialEvents() {
+    async function fetchCelestialEvents() {
         const eventsList = document.getElementById('eventsList');
-        eventsList.innerHTML = '';
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        eventsList.innerHTML = '<p>Loading celestial events...</p>';
 
-        celestialEvents.forEach(event => {
-            const eventDate = new Date(event.date);
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `
-                <span>${event.name}</span>
-                <span class="event-date">${eventDate.toDateString()}</span>
-            `;
-            if (eventDate < today) {
-                listItem.classList.add('past-event');
+        const today = new Date();
+        const startDate = new Date();
+        startDate.setDate(today.getDate() - 30); // Get events from the last 30 days
+
+        const formattedStartDate = startDate.toISOString().split('T')[0];
+        const formattedEndDate = today.toISOString().split('T')[0];
+
+        const DONKI_API_URL_FLR = `https://api.nasa.gov/DONKI/FLR?startDate=${formattedStartDate}&endDate=${formattedEndDate}&api_key=${NASA_API_KEY}`;
+        const DONKI_API_URL_CME = `https://api.nasa.gov/DONKI/CMEAnalysis?startDate=${formattedStartDate}&endDate=${formattedEndDate}&mostAccurateOnly=true&speed=500&halfAngle=30&catalog=ALL&api_key=${NASA_API_KEY}`;
+
+        try {
+            const [flrResponse, cmeResponse] = await Promise.all([
+                fetch(DONKI_API_URL_FLR),
+                fetch(DONKI_API_URL_CME)
+            ]);
+
+            const flrData = await flrResponse.json();
+            const cmeData = await cmeResponse.json();
+
+            let allEvents = [];
+
+            flrData.forEach(event => {
+                allEvents.push({
+                    name: `Solar Flare (FLR) - Class ${event.classType}`,
+                    date: event.beginTime,
+                    link: event.link
+                });
+            });
+
+            cmeData.forEach(event => {
+                allEvents.push({
+                    name: `Coronal Mass Ejection (CME) - ${event.type}`,
+                    date: event.time,
+                    link: event.link
+                });
+            });
+
+            allEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            eventsList.innerHTML = ''; // Clear loading message
+
+            if (allEvents.length > 0) {
+                allEvents.forEach(event => {
+                    const eventDate = new Date(event.date);
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <span>${event.name}</span>
+                        <span class="event-date">${eventDate.toDateString()}</span>
+                        ${event.link ? `<a href="${event.link}" target="_blank">Details</a>` : ''}
+                    `;
+                    eventsList.appendChild(listItem);
+                });
+            } else {
+                eventsList.innerHTML = '<p>No celestial events found for the last 30 days.</p>';
             }
-            eventsList.appendChild(listItem);
-        });
+
+        } catch (error) {
+            console.error('Error fetching celestial events:', error);
+            eventsList.innerHTML = `<p>Failed to load celestial events: ${error.message}.</p>`;
+        }
     }
-    renderCelestialEvents();
+    fetchCelestialEvents();
 
     // Near Earth Objects (NEOs)
     async function fetchNeoData() {
@@ -807,6 +959,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const response = await fetch(NEO_API_URL);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
 
             neoListDiv.innerHTML = ''; // Clear loading message
@@ -824,7 +979,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <strong>${neo.name}</strong><br>
                                     Approach Date: ${date}<br>
                                     Miss Distance: ${parseFloat(neo.close_approach_data[0].miss_distance.kilometers).toFixed(2)} km<br>
-                                    Est. Diameter: ${parseFloat(neo.estimated_diameter.kilometers.estimated_diameter_min).toFixed(2)} - ${parseFloat(neo.estimated_diameter.kilometers.estimated_diameter_max).toFixed(2)} km
+                                    Relative Velocity: ${parseFloat(neo.close_approach_data[0].relative_velocity.kilometers_per_second).toFixed(2)} km/s<br>
+                                    Est. Diameter: ${parseFloat(neo.estimated_diameter.kilometers.estimated_diameter_min).toFixed(2)} - ${parseFloat(neo.estimated_diameter.kilometers.estimated_diameter_max).toFixed(2)} km<br>
+                                    <a href="${neo.nasa_jpl_url}" target="_blank">More Info (JPL)</a>
                                 </li>
                             `;
                         }
@@ -847,6 +1004,89 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     fetchNeoData();
+
+    // Mars Rover Photos
+    async function fetchMarsRoverPhotos() {
+        const roverPhotosContainer = document.getElementById('roverPhotosContainer');
+        roverPhotosContainer.innerHTML = '<p>Loading Mars Rover photos...</p>';
+
+        const MARS_ROVER_API_URL = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/latest_photos?api_key=${NASA_API_KEY}`;
+
+        try {
+            const response = await fetch(MARS_ROVER_API_URL);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            roverPhotosContainer.innerHTML = ''; // Clear loading message
+
+            if (data.latest_photos && data.latest_photos.length > 0) {
+                let photosHtml = '<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">';
+                data.latest_photos.slice(0, 10).forEach(photo => { // Limit to 10 photos
+                    photosHtml += `
+                        <div style="border: 1px solid #ccc; padding: 10px; border-radius: 8px; text-align: center; width: 180px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <img src="${photo.img_src}" alt="${photo.earth_date}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 4px; margin-bottom: 8px;">
+                            <p style="font-size: 0.8em; color: #666; margin: 0;">Earth Date: ${photo.earth_date}</p>
+                            <p style="font-size: 0.8em; color: #666; margin: 0;">Camera: ${photo.camera.full_name}</p>
+                        </div>
+                    `;
+                });
+                photosHtml += '</div>';
+                roverPhotosContainer.innerHTML = photosHtml;
+            } else {
+                roverPhotosContainer.innerHTML = '<p>No Mars Rover photos available.</p>';
+            }
+
+        } catch (error) {
+            console.error('Error fetching Mars Rover photos:', error);
+            roverPhotosContainer.innerHTML = `<p>Failed to load Mars Rover photos: ${error.message}.</p>`;
+        }
+    }
+    fetchMarsRoverPhotos();
+
+    // EPIC Images
+    async function fetchEpicImages() {
+        const epicImageContainer = document.getElementById('epicImageContainer');
+        epicImageContainer.innerHTML = '<p>Loading EPIC images...</p>';
+
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0');
+        const day = today.getDate().toString().padStart(2, '0');
+
+        const EPIC_API_URL = `https://api.nasa.gov/EPIC/api/natural/date/${year}-${month}-${day}?api_key=${NASA_API_KEY}`;
+
+        try {
+            const response = await fetch(EPIC_API_URL);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            epicImageContainer.innerHTML = ''; // Clear loading message
+
+            if (data && data.length > 0) {
+                const latestImage = data[0]; // Get the latest image for the day
+                const imageDate = new Date(latestImage.date);
+                const formattedImageDate = `${imageDate.getFullYear()}/${(imageDate.getMonth() + 1).toString().padStart(2, '0')}/${imageDate.getDate().toString().padStart(2, '0')}`;
+                const imageUrl = `https://api.nasa.gov/EPIC/archive/natural/${formattedImageDate}/png/${latestImage.image}.png?api_key=${NASA_API_KEY}`;
+
+                epicImageContainer.innerHTML = `
+                    <img src="${imageUrl}" alt="${latestImage.caption}" style="max-width: 100%; height: auto; display: block; margin: 1.5rem auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
+                    <p>${latestImage.caption}</p>
+                    <p>Date: ${latestImage.date}</p>
+                `;
+            } else {
+                epicImageContainer.innerHTML = '<p>No EPIC images available for today.</p>';
+            }
+
+        } catch (error) {
+            console.error('Error fetching EPIC images:', error);
+            epicImageContainer.innerHTML = `<p>Failed to load EPIC images: ${error.message}.</p>`;
+        }
+    }
+    fetchEpicImages();
 
     // Astronomical Glossary/Factoids
     const astronomyFacts = [
@@ -891,58 +1131,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
     displayRandomFact(); // Display a fact on initial load
 
-    // NASA Image and Video Library Search
-    const nasaSearchInput = document.getElementById('nasaSearchInput');
-    const nasaSearchButton = document.getElementById('nasaSearchButton');
-    const nasaSearchResultsDiv = document.getElementById('nasaSearchResults');
+    
 
-    nasaSearchButton.addEventListener('click', async () => {
-        const query = nasaSearchInput.value.trim();
-        if (!query) {
-            nasaSearchResultsDiv.innerHTML = '<p>Please enter a search term.</p>';
+    
+
+    // Star Chart Display (Placeholder - requires external API or library for actual chart rendering)
+    const refreshStarChartButton = document.getElementById('refreshStarChart');
+    const starChartDisplay = document.getElementById('star-chart-display');
+
+    function updateStarChart() {
+        const userLat = parseFloat(document.getElementById('userLat').textContent);
+        const userLon = parseFloat(document.getElementById('userLon').textContent);
+
+        if (isNaN(userLat) || isNaN(userLon)) {
+            starChartDisplay.innerHTML = '<p>Please enable location services or enter your location manually to display the star chart.</p>';
             return;
         }
 
-        nasaSearchResultsDiv.innerHTML = '<p>Searching NASA Image and Video Library...</p>';
+        // Clear previous chart
+        starChartDisplay.innerHTML = '';
 
-        const NASA_IMAGES_API_URL = `https://images-api.nasa.gov/search?q=${encodeURIComponent(query)}&media_type=image,video`;
+        // Initialize and display star chart using d3-celestial
+        Celestial.display({
+            container: "star-chart-display",
+            projection: "aitoff",
+            center: [userLon, userLat],
+            zoomlevel: 1,
+            datapath: "https://cdn.jsdelivr.net/npm/d3-celestial@0.7.3/data/",
+            stars: {
+                colors: true,
+                names: true,
+                limit: 6,
+                style: { fill: "#ddf", opacity: 1 }
+            },
+            dsos: { show: true, names: true, limit: 6, style: { fill: "#ddf", opacity: 1 } },
+            constellations: {
+                show: true,
+                names: true,
+                fromstarnames: true,
+                lines: true,
+                bounds: false,
+                style: { stroke: "#ccc", opacity: 0.6, width: 2 }
+            },
+            mw: { show: true, style: { fill: "#fff", opacity: 0.2 } },
+            planets: { show: true, names: true },
+            lines: {
+                graticule: { show: true, stroke: "#ccc", width: 0.6, opacity: 0.8 },
+                equatorial: { show: true, stroke: "#aaa", width: 1.3, opacity: 0.7 },
+                ecliptic: { show: true, stroke: "#66c", width: 1.3, opacity: 0.7 },
+                galactic: { show: false },
+                meridian: { show: true, stroke: "#aaa", width: 1.3, opacity: 0.7 },
+                zenith: { show: true, stroke: "#aaa", width: 1.3, opacity: 0.7 }
+            },
+            horizon: { show: true, fill: "#000000", opacity: 0.5 },
+            form: false, // Hide the default form controls
+            location: true // Use current location
+        });
+    }
 
-        try {
-            const response = await fetch(NASA_IMAGES_API_URL);
-            const data = await response.json();
+    refreshStarChartButton.addEventListener('click', updateStarChart);
 
-            nasaSearchResultsDiv.innerHTML = ''; // Clear loading message
-
-            if (data.collection && data.collection.items.length > 0) {
-                let resultsHtml = '<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">';
-                data.collection.items.slice(0, 20).forEach(item => { // Limit to 20 results
-                    const title = item.data[0].title;
-                    const description = item.data[0].description || 'No description available.';
-                    const mediaType = item.data[0].media_type;
-                    const thumbnail = item.links && item.links.length > 0 ? item.links[0].href : '';
-
-                    if (thumbnail) {
-                        resultsHtml += `
-                            <div style="border: 1px solid #ccc; padding: 10px; border-radius: 8px; text-align: center; width: 180px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                <img src="${thumbnail}" alt="${title}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 4px; margin-bottom: 8px;">
-                                <h4 style="font-size: 1em; margin: 0 0 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${title}</h4>
-                                <p style="font-size: 0.8em; color: #666; height: 40px; overflow: hidden;">${description}</p>
-                                <p style="font-size: 0.7em; font-style: italic;">(${mediaType})</p>
-                            </div>
-                        `;
-                    }
-                });
-                resultsHtml += '</div>';
-                nasaSearchResultsDiv.innerHTML = resultsHtml;
-            } else {
-                nasaSearchResultsDiv.innerHTML = '<p>No results found from NASA Image and Video Library.</p>';
-            }
-
-        } catch (error) {
-            console.error('Error fetching NASA Image and Video Library data:', error);
-            nasaSearchResultsDiv.innerHTML = `<p>Failed to load search results: ${error.message}.</p>`;
-        }
-    });
+    // Initial call for star chart
+    updateStarChart();
 });
     </script>
 </body>
