@@ -328,7 +328,41 @@ body.dark-mode #neoList li p {
     flex-wrap: wrap;
 }
 
-#roverPhotosContainer, #epicImageContainer {
+#roverPhotosContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+#currentRoverPhoto {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+#roverImage {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.rover-navigation {
+    display: flex;
+    gap: 10px;
+}
+
+#roverPhotoDetails {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 0.5rem;
+}
+
+body.dark-mode #roverPhotoDetails {
+    color: #c0c0c0;
+}
+
+#epicImageContainer {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
@@ -336,7 +370,7 @@ body.dark-mode #neoList li p {
     margin-top: 1.5rem;
 }
 
-#roverPhotosContainer div, #epicImageContainer img {
+#epicImageContainer img {
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 8px;
@@ -345,27 +379,9 @@ body.dark-mode #neoList li p {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-body.dark-mode #roverPhotosContainer div, body.dark-mode #epicImageContainer img {
+body.dark-mode #epicImageContainer img {
     border-color: #334a6d;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-}
-
-#roverPhotosContainer img, #epicImageContainer img {
-    width: 100%;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 8px;
-}
-
-#roverPhotosContainer p {
-    font-size: 0.8em;
-    color: #666;
-    margin: 0;
-}
-
-body.dark-mode #roverPhotosContainer p {
-    color: #c0c0c0;
 }
 
 #manual-location input[type="number"] {
@@ -502,7 +518,14 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
         <section id="mars-rover-photos">
             <h2>Mars Rover Photos</h2>
             <div id="roverPhotosContainer">
-                <p>Loading Mars Rover photos...</p>
+                <div id="currentRoverPhoto">
+                    <img id="roverImage" src="" alt="Mars Rover Photo">
+                    <p id="roverPhotoDetails"></p>
+                </div>
+                <div class="rover-navigation">
+                    <button id="prevRoverPhoto">Previous</button>
+                    <button id="nextRoverPhoto">Next</button>
+                </div>
             </div>
         </section>
 
@@ -1008,6 +1031,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mars Rover Photos
     async function fetchMarsRoverPhotos() {
         const roverPhotosContainer = document.getElementById('roverPhotosContainer');
+        const roverImage = document.getElementById('roverImage');
+        const roverPhotoDetails = document.getElementById('roverPhotoDetails');
+        const prevRoverPhotoBtn = document.getElementById('prevRoverPhoto');
+        const nextRoverPhotoBtn = document.getElementById('nextRoverPhoto');
+
+        let currentPhotoIndex = 0;
+        let roverPhotos = [];
+
         roverPhotosContainer.innerHTML = '<p>Loading Mars Rover photos...</p>';
 
         const MARS_ROVER_API_URL = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/latest_photos?api_key=${NASA_API_KEY}`;
@@ -1019,21 +1050,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const data = await response.json();
 
-            roverPhotosContainer.innerHTML = ''; // Clear loading message
+            roverPhotos = data.latest_photos;
 
-            if (data.latest_photos && data.latest_photos.length > 0) {
-                let photosHtml = '<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">';
-                data.latest_photos.slice(0, 10).forEach(photo => { // Limit to 10 photos
-                    photosHtml += `
-                        <div style="border: 1px solid #ccc; padding: 10px; border-radius: 8px; text-align: center; width: 180px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                            <img src="${photo.img_src}" alt="${photo.earth_date}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 4px; margin-bottom: 8px;">
-                            <p style="font-size: 0.8em; color: #666; margin: 0;">Earth Date: ${photo.earth_date}</p>
-                            <p style="font-size: 0.8em; color: #666; margin: 0;">Camera: ${photo.camera.full_name}</p>
-                        </div>
-                    `;
+            if (roverPhotos && roverPhotos.length > 0) {
+                function displayPhoto() {
+                    const photo = roverPhotos[currentPhotoIndex];
+                    roverImage.src = photo.img_src;
+                    roverImage.alt = `Mars Rover Photo - ${photo.earth_date}`;
+                    roverPhotoDetails.textContent = `Earth Date: ${photo.earth_date} | Camera: ${photo.camera.full_name}`;
+                }
+
+                prevRoverPhotoBtn.addEventListener('click', () => {
+                    currentPhotoIndex = (currentPhotoIndex - 1 + roverPhotos.length) % roverPhotos.length;
+                    displayPhoto();
                 });
-                photosHtml += '</div>';
-                roverPhotosContainer.innerHTML = photosHtml;
+
+                nextRoverPhotoBtn.addEventListener('click', () => {
+                    currentPhotoIndex = (currentPhotoIndex + 1) % roverPhotos.length;
+                    displayPhoto();
+                });
+
+                displayPhoto(); // Display the first photo
+
             } else {
                 roverPhotosContainer.innerHTML = '<p>No Mars Rover photos available.</p>';
             }

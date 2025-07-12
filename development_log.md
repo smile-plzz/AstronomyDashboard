@@ -12,7 +12,7 @@
 
 ### Feature Additions
 
-*   **Mars Rover Photos Integration**: Added a new section and JavaScript functionality to fetch and display the latest photos from NASA's Mars Rovers (Curiosity).
+*   **Mars Rover Photos Integration**: Added a new section and JavaScript functionality to fetch and display the latest photos from NASA's Mars Rovers (Curiosity), including a sliding feature with left/right arrow navigation for user interactivity and single image preview.
 *   **EPIC (Earth Polychromatic Imaging Camera) Images Integration**: Added a new section and JavaScript functionality to fetch and display daily images of Earth from NASA's EPIC camera.
 *   **Enhanced Near Earth Objects (NEOs) Display**: Modified the NEOs section to include more detailed information such as relative velocity and a direct link to the NASA JPL Small-Body Database for each object.
 

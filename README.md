@@ -10,6 +10,7 @@ This is a single-page HTML application designed to provide astronomy enthusiasts
 *   **User Location**: Detects user's geographical coordinates (with fallback for manual input).
 *   **Upcoming Celestial Events**: Dynamically fetches and displays notable celestial events (Solar Flares, Coronal Mass Ejections).
 *   **Near Earth Objects (NEOs)**: Displays information about potentially hazardous Near Earth Objects.
+*   **Mars Rover Photos Integration**: Added a new section and JavaScript functionality to fetch and display the latest photos from NASA's Mars Rovers (Curiosity), with a sliding feature for user interactivity (left/right arrow navigation and single image preview).
 *   **NASA Image and Video Library Search**: Allows users to search and view images and videos from NASA's extensive library.
 *   **Interactive Star Chart**: Displays an interactive star chart using `d3-celestial` based on user's location, showing stars, constellations, and other celestial objects.
 *   **Favorites**: Allows users to save their favorite APOD images to local storage and view them in a collapsible list.
