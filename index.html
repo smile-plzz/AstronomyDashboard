@@ -5,128 +5,375 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Astronomy Dashboard</title>
     <style>
+:root {
+    --background: #f4f7f6;
+    --surface: #ffffff;
+    --surface-highlight: #f0f5ff;
+    --text-primary: #2c3e50;
+    --text-secondary: #4a6076;
+    --accent: #3498db;
+    --accent-strong: #1c6fb8;
+    --outline: #d6dce5;
+    --shadow-soft: 0 20px 45px rgba(31, 45, 61, 0.12);
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f7f6;
-    color: #333;
+    background-color: var(--background);
+    color: var(--text-secondary);
     transition: background-color 0.4s ease, color 0.4s ease;
     line-height: 1.6;
 }
 
 body.dark-mode {
-    background-color: #1a1a2e;
-    color: #e0e0e0;
+    --background: #0f172a;
+    --surface: #16213e;
+    --surface-highlight: #1f2d4d;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5f5;
+    --accent: #7ddffc;
+    --accent-strong: #59c5ef;
+    --outline: #253355;
+    --shadow-soft: 0 20px 45px rgba(5, 12, 24, 0.6);
 }
 
 header {
-    background-color: #2c3e50;
+    background: linear-gradient(135deg, #1c2541, #0b132b);
     color: #fff;
-    padding: 1.5rem 1rem;
-    text-align: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    padding: 2.5rem 1.5rem 2rem;
+    box-shadow: 0 18px 45px rgba(6, 16, 38, 0.35);
+}
+
+.header-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
 }
 
 h1 {
     margin: 0;
-    font-size: 2.5rem;
+    font-size: 2.6rem;
     letter-spacing: 1px;
 }
 
+.header-subtitle {
+    max-width: 720px;
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.12);
+    padding: 0.35rem 0.9rem;
+    font-size: 0.85rem;
+    color: #f8faff;
+}
+
+.header-actions button {
+    width: auto;
+}
+
 main {
-    padding: 1.5rem;
-    max-width: 1000px;
+    padding: 2.5rem 1.5rem 4rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.75rem;
+    max-width: 1100px;
     margin: 0 auto;
 }
 
-section {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-    padding: 2rem;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+section.card {
+    background-color: var(--surface);
+    border-radius: 18px;
+    box-shadow: var(--shadow-soft);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border: 1px solid var(--outline);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-body.dark-mode section {
-    background-color: #16213e;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+section.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 55px rgba(25, 38, 52, 0.18);
+    border-color: rgba(52, 152, 219, 0.4);
+}
+
+section.full-width {
+    grid-column: 1 / -1;
+}
+
+section.highlight {
+    background: linear-gradient(155deg, var(--surface), var(--surface-highlight));
 }
 
 h2 {
-    color: #34495e;
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    font-size: 1.8rem;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 0.5rem;
-}
-
-body.dark-mode h2 {
-    color: #e0e0e0;
-    border-bottom-color: #334a6d;
+    color: var(--text-primary);
+    margin: 0;
+    font-size: 1.55rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
 h3 {
-    color: #2980b9;
-    font-size: 1.4rem;
-    margin-top: 1rem;
-    margin-bottom: 0.8rem;
+    color: var(--accent);
+    font-size: 1.25rem;
+    margin: 0;
 }
 
-body.dark-mode h3 {
-    color: #7ddffc;
+.apod-heading {
+    margin-top: 0.5rem;
+    color: var(--text-primary);
+    font-size: 1.3rem;
 }
 
-#apod img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 1.5rem auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
-button {
-    background-color: #3498db;
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-right: 0.5rem;
+.section-header h2 {
+    flex: 1 1 auto;
+}
+
+.input-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
     margin-top: 0.5rem;
 }
 
-button:hover {
-    background-color: #2980b9;
+.input-row button {
+    margin-top: 0;
+}
+
+section.card p {
+    margin: 0 0 0.75rem 0;
+    color: var(--text-secondary);
+}
+
+section.card p:last-child {
+    margin-bottom: 0;
+}
+
+#nasaSearchInput {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--outline);
+    width: min(420px, 100%);
+    font-size: 1rem;
+    margin-right: 0.75rem;
+    background-color: var(--surface-highlight);
+    color: var(--text-primary);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#nasaSearchInput:focus {
+    outline: none;
+    border-color: rgba(52, 152, 219, 0.65);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+#nasaSearchResults {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.search-result {
+    background-color: rgba(15, 52, 96, 0.05);
+    border: 1px solid rgba(52, 152, 219, 0.2);
+    border-radius: 14px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-result:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 30px rgba(25, 38, 52, 0.16);
+}
+
+.apod-media {
+    position: relative;
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(76, 110, 245, 0.18), rgba(15, 23, 42, 0.35));
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 14px 28px rgba(23, 31, 54, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 260px;
+}
+
+.apod-media.is-video {
+    background: radial-gradient(circle at top, rgba(125, 223, 252, 0.18), rgba(15, 23, 42, 0.75));
+}
+
+.apod-media img,
+.apod-media iframe {
+    width: 100%;
+    border-radius: inherit;
+}
+
+.apod-media img {
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.apod-media iframe {
+    aspect-ratio: 16 / 9;
+    border: 0;
+    background-color: #000;
+}
+
+.apod-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.75rem;
+    text-align: center;
+    gap: 1rem;
+    background: rgba(15, 23, 42, 0.85);
+    color: #e2e8f0;
+}
+
+.apod-fallback p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.apod-fallback-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.apod-fallback a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.65rem 1.4rem;
+    border-radius: 999px;
+    background-color: rgba(125, 223, 252, 0.12);
+    border: 1px solid rgba(125, 223, 252, 0.35);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.apod-fallback a:hover {
     transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(125, 223, 252, 0.25);
+    background-color: rgba(125, 223, 252, 0.22);
 }
 
-body.dark-mode button {
-    background-color: #0f3460;
+.apod-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
 }
 
-body.dark-mode button:hover {
-    background-color: #1a527f;
+.apod-actions button {
+    margin: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+button {
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    color: #fff;
+    padding: 0.75rem 1.55rem;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+    box-shadow: 0 12px 25px rgba(52, 152, 219, 0.35);
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 32px rgba(52, 152, 219, 0.45);
+}
+
+button:disabled,
+button:disabled:hover {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+button.secondary {
+    background: none;
+    color: var(--accent);
+    border: 1px solid rgba(52, 152, 219, 0.4);
+    box-shadow: none;
+}
+
+button.secondary:hover {
+    color: #fff;
+    background: var(--accent);
+    border-color: transparent;
 }
 
 footer {
     text-align: center;
-    padding: 1.5rem;
-    color: #7f8c8d;
-    font-size: 0.9rem;
-    background-color: #ecf0f1;
-    border-top: 1px solid #e0e0e0;
-}
-
-body.dark-mode footer {
-    color: #a0a0a0;
-    background-color: #0f3460;
-    border-top-color: #2c3e50;
+    padding: 2rem 1.5rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    background-color: var(--surface);
+    border-top: 1px solid var(--outline);
 }
 
 #favoritesList.collapsed {
@@ -136,55 +383,82 @@ body.dark-mode footer {
 .favorite-item {
     display: flex;
     align-items: center;
+    gap: 1rem;
     margin-bottom: 15px;
-    border: 1px solid #e0e0e0;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    transition: background-color 0.3s ease;
-}
-
-body.dark-mode .favorite-item {
-    border-color: #334a6d;
-    background-color: #223a5e;
+    border: 1px solid var(--outline);
+    padding: 12px 16px;
+    border-radius: 14px;
+    background-color: rgba(52, 152, 219, 0.06);
+    box-shadow: inset 0 0 0 1px rgba(52, 152, 219, 0.08);
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .favorite-item:hover {
-    background-color: #eef;
+    transform: translateY(-2px);
+    background-color: rgba(52, 152, 219, 0.12);
 }
 
-body.dark-mode .favorite-item:hover {
-    background-color: #2a476e;
+.favorite-thumbnail {
+    width: 82px;
+    height: 82px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+    background: linear-gradient(145deg, rgba(52, 152, 219, 0.25), rgba(76, 110, 245, 0.15));
 }
 
-.favorite-item img {
-    width: 80px;
-    height: 80px;
+.favorite-thumbnail img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    margin-right: 15px;
-    border-radius: 4px;
+    display: block;
 }
 
-.favorite-item p {
+.favorite-media-badge {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    background: rgba(15, 23, 42, 0.85);
+    color: #fff;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    padding: 0.15rem 0.45rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+}
+
+.favorite-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    color: var(--text-secondary);
+}
+
+.favorite-title {
     margin: 0;
-    flex-grow: 1;
-    color: #555;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
-body.dark-mode .favorite-item p {
-    color: #c0c0c0;
+.favorite-date {
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
 }
 
 .favorite-item button {
     margin-left: auto;
+    margin-right: 0;
     padding: 0.6rem 1rem;
     font-size: 0.9rem;
-    background-color: #e74c3c;
+    background: linear-gradient(135deg, #f76b5c, #d63c2f);
+    box-shadow: 0 12px 24px rgba(231, 76, 60, 0.35);
 }
 
 .favorite-item button:hover {
-    background-color: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 30px rgba(231, 76, 60, 0.45);
 }
 
 #offline-banner {
@@ -207,42 +481,29 @@ body.dark-mode .favorite-item p {
 }
 
 #celestial-events li {
-    background-color: #ecf0f1;
+    background-color: rgba(52, 152, 219, 0.08);
     margin-bottom: 10px;
     padding: 12px 15px;
     border-radius: 8px;
-    border-left: 5px solid #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.25);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-body.dark-mode #celestial-events li {
-    background-color: #2c3e50;
-    border-left-color: #7ddffc;
-}
-
 #celestial-events li.past-event {
     opacity: 0.6;
-    border-left-color: #95a5a6;
+    border-color: rgba(149, 165, 166, 0.3);
 }
 
 #celestial-events li span {
     font-weight: bold;
-    color: #2c3e50;
-}
-
-body.dark-mode #celestial-events li span {
-    color: #e0e0e0;
+    color: var(--text-primary);
 }
 
 #celestial-events .event-date {
     font-size: 0.9em;
-    color: #7f8c8d;
-}
-
-body.dark-mode #celestial-events .event-date {
-    color: #a0a0a0;
+    color: var(--text-secondary);
 }
 
 #neoList ul {
@@ -251,58 +512,43 @@ body.dark-mode #celestial-events .event-date {
 }
 
 #neoList li {
-    background-color: #ecf0f1;
+    background-color: rgba(241, 196, 15, 0.12);
     margin-bottom: 10px;
     padding: 12px 15px;
     border-radius: 8px;
-    border-left: 5px solid #f39c12; /* A distinct color for NEOs */
-    transition: background-color 0.3s ease;
-}
-
-body.dark-mode #neoList li {
-    background-color: #2c3e50;
-    border-left-color: #e67e22;
+    border: 1px solid rgba(243, 156, 18, 0.3); /* A distinct color for NEOs */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 #neoList li:hover {
-    background-color: #e0e6e8;
-}
-
-body.dark-mode #neoList li:hover {
-    background-color: #3a506b;
+    transform: translateY(-3px);
+    box-shadow: 0 18px 32px rgba(243, 156, 18, 0.18);
 }
 
 #neoList li strong {
-    color: #34495e;
-}
-
-body.dark-mode #neoList li strong {
-    color: #e0e0e0;
+    color: var(--text-primary);
 }
 
 #neoList li p {
     margin: 5px 0 0 0;
     font-size: 0.9em;
-    color: #555;
-}
-
-body.dark-mode #neoList li p {
-    color: #c0c0c0;
+    color: var(--text-secondary);
 }
 
 #star-chart-display {
     width: 100%;
     height: 500px; /* Increased height for better visibility */
-    background-color: #000;
-    color: #fff;
+    background: radial-gradient(circle at top, rgba(125, 223, 252, 0.18), rgba(12, 27, 58, 0.95));
+    color: #f8fafc;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1.5rem;
-    border-radius: 8px;
+    border-radius: 16px;
     margin-top: 1.5rem;
     position: relative;
     overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(125, 223, 252, 0.15), 0 20px 45px rgba(0, 0, 0, 0.35);
 }
 
 #star-chart-display canvas {
@@ -322,9 +568,9 @@ body.dark-mode #neoList li p {
 
 #star-chart-controls {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 1rem;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 1.25rem;
     flex-wrap: wrap;
 }
 
@@ -332,7 +578,8 @@ body.dark-mode #neoList li p {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
+    gap: 1rem;
 }
 
 #currentRoverPhoto {
@@ -343,23 +590,19 @@ body.dark-mode #neoList li p {
 #roverImage {
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    box-shadow: 0 18px 38px rgba(19, 23, 45, 0.35);
 }
 
 .rover-navigation {
     display: flex;
-    gap: 10px;
+    gap: 12px;
 }
 
 #roverPhotoDetails {
     font-size: 0.9em;
-    color: #555;
+    color: var(--text-secondary);
     margin-top: 0.5rem;
-}
-
-body.dark-mode #roverPhotoDetails {
-    color: #c0c0c0;
 }
 
 #epicImageContainer {
@@ -371,74 +614,78 @@ body.dark-mode #roverPhotoDetails {
 }
 
 #epicImageContainer img {
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 8px;
+    border: 1px solid rgba(125, 223, 252, 0.25);
+    padding: 12px;
+    border-radius: 14px;
     text-align: center;
     width: 180px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-body.dark-mode #epicImageContainer img {
-    border-color: #334a6d;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 16px 30px rgba(12, 23, 54, 0.25);
 }
 
 #manual-location input[type="number"] {
-    padding: 0.6rem;
+    padding: 0.65rem 0.9rem;
     margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid var(--outline);
+    border-radius: 10px;
     font-size: 1rem;
-    width: 120px;
-    background-color: #f9f9f9;
-    color: #333;
+    width: 140px;
+    background-color: var(--surface-highlight);
+    color: var(--text-primary);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-body.dark-mode #manual-location input[type="number"] {
-    background-color: #2c3e50;
-    border-color: #334a6d;
-    color: #e0e0e0;
+#manual-location input[type="number"]:focus {
+    outline: none;
+    border-color: rgba(52, 152, 219, 0.65);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
 
 #manual-location label {
     margin-right: 5px;
-    font-weight: bold;
-    color: #555;
-}
-
-body.dark-mode #manual-location label {
-    color: #c0c0c0;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 #locationStatus, #manualLocationStatus {
     margin-top: 10px;
     font-style: italic;
-    color: #666;
+    color: var(--text-secondary);
 }
 
-body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
-    color: #a0a0a0;
+@media (max-width: 960px) {
+    .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 720px) {
+    header {
+        padding: 2.25rem 1.2rem 1.8rem;
+    }
     h1 {
-        font-size: 2rem;
+        font-size: 2.1rem;
     }
-    h2 {
-        font-size: 1.6rem;
+    .header-subtitle {
+        font-size: 0.98rem;
     }
-    section {
+    main {
+        padding: 2rem 1.2rem 3rem;
+    }
+    section.card {
         padding: 1.5rem;
-        margin-bottom: 1.5rem;
     }
     button {
-        padding: 0.7rem 1.2rem;
-        font-size: 0.9rem;
+        width: 100%;
+        margin-right: 0;
     }
     #manual-location input[type="number"] {
-        width: 100px;
-        margin-bottom: 10px;
+        width: 100%;
+        margin-right: 0;
     }
     #manual-location label {
         display: block;
@@ -448,74 +695,85 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
 
 @media (max-width: 480px) {
     h1 {
-        font-size: 1.8rem;
+        font-size: 1.85rem;
     }
-    h2 {
-        font-size: 1.4rem;
+    .dashboard-grid {
+        gap: 1.3rem;
     }
-    main {
-        padding: 1rem;
-    }
-    section {
-        padding: 1rem;
-        margin-bottom: 1rem;
-    }
-    button {
-        width: 100%;
-        margin-right: 0;
-    }
-    #manual-location input[type="number"] {
-        width: calc(100% - 22px); /* Account for padding and border */
-        margin-right: 0;
-    }
-    #star-chart-controls button {
-        width: auto;
+    #star-chart-display {
+        height: 360px;
     }
 }
     </style>
 </head>
 <body>
     <header>
-        <h1>Astronomy Dashboard</h1>
-        <button id="darkModeToggle">Toggle Dark Mode</button>
+        <div class="header-content">
+            <div class="header-top">
+                <div>
+                    <h1>Astronomy Dashboard</h1>
+                    <p class="header-subtitle">Explore daily NASA highlights, follow spacecraft, and stay ready for the next big celestial moment with a refined command center.</p>
+                </div>
+                <div class="header-actions">
+                    <span class="pill">Live NASA feeds</span>
+                    <span class="pill">Offline aware</span>
+                    <button id="darkModeToggle" class="secondary">Toggle Dark Mode</button>
+                </div>
+            </div>
+        </div>
     </header>
     <main>
-        <section id="apod">
+        <div class="dashboard-grid">
+        <section id="apod" class="card highlight full-width">
             <h2>Astronomy Picture of the Day</h2>
-            <h3 id="apodTitle"></h3>
-            <img id="apodImage" src="" alt="Astronomy Picture of the Day">
+            <h3 id="apodTitle" class="apod-heading"></h3>
+            <div class="apod-media" id="apodMediaWrapper">
+                <img id="apodImage" src="" alt="Astronomy Picture of the Day" loading="lazy" decoding="async" class="hidden">
+                <iframe id="apodVideo" title="Astronomy Picture of the Day video" class="hidden" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                <div id="apodFallback" class="apod-fallback hidden" role="alert">
+                    <p id="apodFallbackText">We couldn't load today's featured media.</p>
+                    <div class="apod-fallback-actions">
+                        <button id="retryApod" type="button" class="secondary">Retry</button>
+                        <a id="apodExternalLink" href="https://apod.nasa.gov/apod/astropix.html" target="_blank" rel="noopener">Open on NASA.gov</a>
+                    </div>
+                </div>
+            </div>
             <p id="apodDescription"></p>
             <p id="apodCopyright"></p>
+            <div class="apod-actions">
+                <button id="apodFavoriteButton" type="button" disabled>Add to Favorites</button>
+                <button id="apodShareButton" type="button" class="secondary" disabled>Share APOD</button>
+            </div>
         </section>
-        <section id="iss-location">
+        <section id="iss-location" class="card">
             <h2>International Space Station (ISS) Location</h2>
             <p>Latitude: <span id="issLat"></span></p>
             <p>Longitude: <span id="issLon"></span></p>
         </section>
-        <section id="moon-phase">
+        <section id="moon-phase" class="card">
             <h2>Current Moon Phase</h2>
             <p id="moonPhaseText"></p>
         </section>
-        <section id="user-location">
+        <section id="user-location" class="card">
             <h2>Your Location</h2>
             <p>Latitude: <span id="userLat">N/A</span></p>
             <p>Longitude: <span id="userLon">N/A</span></p>
             <p id="locationStatus"></p>
         </section>
-        <section id="celestial-events">
+        <section id="celestial-events" class="card full-width">
             <h2>Upcoming Celestial Events</h2>
             <ul id="eventsList">
             </ul>
         </section>
 
-        <section id="neo-data">
+        <section id="neo-data" class="card">
             <h2>Near Earth Objects (NEOs)</h2>
             <div id="neoList">
                 <p>Loading Near Earth Object data...</p>
             </div>
         </section>
 
-        <section id="mars-rover-photos">
+        <section id="mars-rover-photos" class="card full-width">
             <h2>Mars Rover Photos</h2>
             <div id="roverPhotosContainer">
                 <div id="currentRoverPhoto">
@@ -529,28 +787,30 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
             </div>
         </section>
 
-        <section id="epic-images">
+        <section id="epic-images" class="card">
             <h2>Earth Polychromatic Imaging Camera (EPIC) Images</h2>
             <div id="epicImageContainer">
                 <p>Loading EPIC images...</p>
             </div>
         </section>
 
-        <section id="astronomy-fact">
+        <section id="astronomy-fact" class="card">
             <h2>Astronomy Fact of the Day</h2>
             <p id="factTitle"></p>
             <p id="factDescription"></p>
             <button id="newFactButton">New Fact</button>
         </section>
 
-        <section id="nasa-image-video-search">
+        <section id="nasa-image-video-search" class="card full-width">
             <h2>NASA Image and Video Library Search</h2>
-            <input type="text" id="nasaSearchInput" placeholder="Search for images or videos...">
-            <button id="nasaSearchButton">Search</button>
+            <div class="input-row">
+                <input type="text" id="nasaSearchInput" placeholder="Search for images or videos...">
+                <button id="nasaSearchButton">Search</button>
+            </div>
             <div id="nasaSearchResults"></div>
         </section>
 
-        <section id="star-chart">
+        <section id="star-chart" class="card full-width">
             <h2>Interactive Star Chart</h2>
             <div id="star-chart-display">
                 <p>Star chart will appear here.</p>
@@ -559,18 +819,16 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
                 <button id="refreshStarChart">Refresh Star Chart</button>
             </div>
         </section>
-
-
-
-
-        
-        <section id="favorites">
-            <h2>Your Favorites <button id="toggleFavorites">Show/Hide</button></h2>
+        <section id="favorites" class="card">
+            <div class="section-header">
+                <h2>Your Favorites</h2>
+                <button id="toggleFavorites" class="secondary">Show/Hide</button>
+            </div>
             <div id="favoritesList" class="collapsed">
                 <p>No favorites saved yet.</p>
             </div>
         </section>
-        <section id="manual-location">
+        <section id="manual-location" class="card">
             <h2>Manual Location Input</h2>
             <label for="manualLat">Latitude:</label>
             <input type="number" id="manualLat" placeholder="e.g., 34.05" step="0.01">
@@ -579,7 +837,8 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
             <button id="saveLocation">Save Location</button>
             <p id="manualLocationStatus"></p>
         </section>
-        </main>
+        </div>
+    </main>
     <footer>
         <p>&copy; 2025 Astronomy Dashboard</p>
     </footer>
@@ -591,9 +850,15 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
     <script>
 document.addEventListener('DOMContentLoaded', () => {
     const NASA_API_KEY = 'tIrqLSEdCCAzLNSihVNlIKqhiFhHW3gZIWD5cUXj';
-    const APOD_URL = `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`;
+    const APOD_URL = `https://api.nasa.gov/planetary/apod?thumbs=true&api_key=${NASA_API_KEY}`;
     const ISS_URL = 'http://api.open-notify.org/iss-now.json';
     const CACHE_NAME = 'astronomy-dashboard-cache-v1';
+    const CACHE_SUPPORTED = 'caches' in window;
+    const APOD_FALLBACK_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMTYwIj4KPHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxNjAiIHJ4PSIxNiIgZmlsbD0iIzFjMjU0MSIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iNDgiIGZpbGw9IiMzNDk4ZGIiIG9wYWNpdHk9IjAuNjUiLz4KPHRleHQgeD0iMTAwIiB5PSI5MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IidTZWdvZSBVSScsIFRhaG9tYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCIgZmlsbD0id2hpdGUiPkFQT0Q8L3RleHQ+Cjwvc3ZnPg==';
+
+    if (!CACHE_SUPPORTED) {
+        console.info('Cache API is unavailable in this context; offline content reuse will be limited.');
+    }
 
     // Dark Mode Toggle
     const darkModeToggle = document.getElementById('darkModeToggle');
@@ -612,19 +877,220 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    const apodTitle = document.getElementById('apodTitle');
+    const apodImage = document.getElementById('apodImage');
+    const apodVideo = document.getElementById('apodVideo');
+    const apodDescription = document.getElementById('apodDescription');
+    const apodCopyright = document.getElementById('apodCopyright');
+    const apodMediaWrapper = document.getElementById('apodMediaWrapper');
+    const apodFallback = document.getElementById('apodFallback');
+    const apodFallbackText = document.getElementById('apodFallbackText');
+    const apodExternalLink = document.getElementById('apodExternalLink');
+    const retryApodButton = document.getElementById('retryApod');
+    const apodFavoriteButton = document.getElementById('apodFavoriteButton');
+    const apodShareButton = document.getElementById('apodShareButton');
+
+    let currentApodData = null;
+
+    function resetApodMedia() {
+        apodImage.classList.add('hidden');
+        apodImage.removeAttribute('src');
+        apodImage.alt = '';
+        apodVideo.classList.add('hidden');
+        apodVideo.removeAttribute('src');
+        apodVideo.removeAttribute('title');
+        apodMediaWrapper.classList.remove('is-video');
+        apodMediaWrapper.style.backgroundImage = '';
+        apodFallback.classList.add('hidden');
+    }
+
+    function showApodFallback(message, linkUrl = 'https://apod.nasa.gov/apod/astropix.html') {
+        apodImage.classList.add('hidden');
+        apodImage.removeAttribute('src');
+        apodVideo.classList.add('hidden');
+        apodVideo.removeAttribute('src');
+        apodVideo.removeAttribute('title');
+        apodMediaWrapper.classList.remove('is-video');
+        apodMediaWrapper.style.backgroundImage = '';
+        apodFallbackText.textContent = message;
+        apodFallback.classList.remove('hidden');
+        if (linkUrl) {
+            apodExternalLink.href = linkUrl;
+        }
+    }
+
+    function getEmbeddableVideoUrl(url) {
+        if (!url) {
+            return '';
+        }
+        try {
+            const parsed = new URL(url);
+            if (parsed.hostname.includes('youtube.com')) {
+                if (parsed.pathname === '/watch') {
+                    const videoId = parsed.searchParams.get('v');
+                    if (videoId) {
+                        const params = new URLSearchParams();
+                        if (parsed.searchParams.get('list')) {
+                            params.set('list', parsed.searchParams.get('list'));
+                        }
+                        const start = parsed.searchParams.get('start') || parsed.searchParams.get('t');
+                        if (start) {
+                            params.set('start', start);
+                        }
+                        const paramString = params.toString();
+                        return `https://www.youtube.com/embed/${videoId}${paramString ? `?${paramString}` : ''}`;
+                    }
+                }
+                if (parsed.pathname.startsWith('/embed/')) {
+                    return url;
+                }
+            }
+            if (parsed.hostname === 'youtu.be') {
+                const videoId = parsed.pathname.replace('/', '');
+                const paramString = parsed.search ? parsed.search : '';
+                return `https://www.youtube.com/embed/${videoId}${paramString}`;
+            }
+            return url;
+        } catch (error) {
+            console.warn('Unable to parse APOD video URL:', error);
+            return url;
+        }
+    }
+
+    function displayApod(data, { offline = false } = {}) {
+        resetApodMedia();
+        currentApodData = data;
+
+        const prefix = offline ? '(Offline) ' : '';
+        const titleText = data.title || 'Astronomy Picture of the Day';
+        const descriptionText = data.explanation || 'No description is available for this entry.';
+        apodTitle.textContent = `${prefix}${titleText}`;
+        apodDescription.textContent = offline ? `${prefix}${descriptionText}` : descriptionText;
+        apodCopyright.textContent = data.copyright ? `${prefix}Image Credit: ${data.copyright}` : '';
+        apodExternalLink.href = data.url || 'https://apod.nasa.gov/apod/astropix.html';
+
+        const imageUrl = data.hdurl || data.url || data.thumbnail_url || '';
+        const shareUrl = data.media_type === 'image' ? (data.hdurl || data.url) : data.url;
+        const thumbnailUrl = data.media_type === 'video'
+            ? (data.thumbnail_url || APOD_FALLBACK_IMAGE)
+            : (data.url || data.hdurl || APOD_FALLBACK_IMAGE);
+
+        if (data.media_type === 'video') {
+            const embedUrl = getEmbeddableVideoUrl(data.url);
+            if (embedUrl) {
+                apodVideo.src = embedUrl;
+                apodVideo.title = `${titleText} video`;
+                apodVideo.classList.remove('hidden');
+                apodMediaWrapper.classList.add('is-video');
+                if (thumbnailUrl) {
+                    apodMediaWrapper.style.backgroundImage = `url("${thumbnailUrl}")`;
+                }
+            } else if (thumbnailUrl) {
+                apodImage.src = thumbnailUrl;
+                apodImage.alt = `${titleText} video preview`;
+                apodImage.classList.remove('hidden');
+                apodMediaWrapper.classList.add('is-video');
+            } else {
+                showApodFallback("Today's APOD is a video that must be viewed on NASA.gov.", data.url || 'https://apod.nasa.gov/apod/astropix.html');
+            }
+        } else if (imageUrl) {
+            apodImage.src = imageUrl;
+            apodImage.alt = titleText;
+            apodImage.classList.remove('hidden');
+        } else {
+            showApodFallback("We couldn't locate a displayable image for today's APOD.", data.url || 'https://apod.nasa.gov/apod/astropix.html');
+        }
+
+        const hasSharableMedia = Boolean(shareUrl);
+        apodFavoriteButton.disabled = !hasSharableMedia;
+        apodShareButton.disabled = !hasSharableMedia;
+    }
+
+    apodImage.addEventListener('error', () => {
+        if (!apodImage.getAttribute('src')) {
+            return;
+        }
+        const fallbackLink = currentApodData && currentApodData.url ? currentApodData.url : 'https://apod.nasa.gov/apod/astropix.html';
+        showApodFallback("We couldn't display today's image. Try again soon or open it directly on NASA.gov.", fallbackLink);
+    });
+
+    retryApodButton.addEventListener('click', () => {
+        retryApodButton.disabled = true;
+        fetchApod().finally(() => {
+            retryApodButton.disabled = false;
+        });
+    });
+
+    apodFavoriteButton.addEventListener('click', () => {
+        if (!currentApodData) {
+            return;
+        }
+        const favorites = JSON.parse(localStorage.getItem('apodFavorites') || '[]');
+        const mediaUrl = currentApodData.media_type === 'image'
+            ? (currentApodData.hdurl || currentApodData.url)
+            : currentApodData.url;
+        const thumbnailUrl = currentApodData.media_type === 'video'
+            ? (currentApodData.thumbnail_url || APOD_FALLBACK_IMAGE)
+            : (currentApodData.url || currentApodData.hdurl || APOD_FALLBACK_IMAGE);
+
+        const newFavorite = {
+            title: currentApodData.title || 'Astronomy Picture of the Day',
+            url: mediaUrl || '',
+            date: currentApodData.date || new Date().toISOString().split('T')[0],
+            media_type: currentApodData.media_type,
+            thumbnail_url: thumbnailUrl || APOD_FALLBACK_IMAGE,
+        };
+
+        if (!favorites.some(fav => fav.date === newFavorite.date)) {
+            favorites.push(newFavorite);
+            localStorage.setItem('apodFavorites', JSON.stringify(favorites));
+            renderFavorites();
+            alert('Added to favorites!');
+        } else {
+            alert('This APOD is already in your favorites.');
+        }
+    });
+
+    apodShareButton.addEventListener('click', async () => {
+        if (!currentApodData) {
+            return;
+        }
+        const shareUrl = currentApodData.media_type === 'image'
+            ? (currentApodData.hdurl || currentApodData.url)
+            : currentApodData.url;
+
+        if (!shareUrl) {
+            alert('This item cannot be shared right now.');
+            return;
+        }
+
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: currentApodData.title,
+                    text: currentApodData.explanation || 'Astronomy Picture of the Day',
+                    url: shareUrl,
+                });
+            } else {
+                await navigator.clipboard.writeText(shareUrl);
+                alert('APOD link copied to clipboard!');
+            }
+        } catch (error) {
+            console.error('Error sharing APOD:', error);
+            alert('Sharing was canceled or not available.');
+        }
+    });
+
     // Fetch APOD with caching
     async function fetchApod() {
-        const apodTitle = document.getElementById('apodTitle');
-        const apodImage = document.getElementById('apodImage');
-        const apodDescription = document.getElementById('apodDescription');
-        const apodCopyright = document.getElementById('apodCopyright');
-        const apodSection = document.getElementById('apod');
-
+        currentApodData = null;
+        apodFavoriteButton.disabled = true;
+        apodShareButton.disabled = true;
         apodTitle.textContent = 'Loading Astronomy Picture of the Day...';
-        apodImage.src = '';
-        apodImage.alt = '';
         apodDescription.textContent = '';
         apodCopyright.textContent = '';
+        apodExternalLink.href = 'https://apod.nasa.gov/apod/astropix.html';
+        resetApodMedia();
 
         try {
             const response = await fetch(APOD_URL);
@@ -633,89 +1099,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const data = await response.json();
 
-            apodTitle.textContent = data.title;
-            apodImage.src = data.hdurl || data.url;
-            apodImage.alt = data.title;
-            apodDescription.textContent = data.explanation;
-            apodCopyright.textContent = data.copyright ? `Image Credit: ${data.copyright}` : '';
+            displayApod(data);
 
-            // Cache APOD data
-            const cache = await caches.open(CACHE_NAME);
-            await cache.put(APOD_URL, new Response(JSON.stringify(data)));
-
-            // Add to favorites button
-            let favoriteButton = apodSection.querySelector('.favorite-button');
-            if (!favoriteButton) {
-                favoriteButton = document.createElement('button');
-                favoriteButton.textContent = 'Add to Favorites';
-                favoriteButton.classList.add('favorite-button');
-                apodSection.appendChild(favoriteButton);
+            if (CACHE_SUPPORTED) {
+                const cache = await caches.open(CACHE_NAME);
+                await cache.put(APOD_URL, new Response(JSON.stringify(data)));
             }
-            favoriteButton.onclick = () => {
-                let favorites = JSON.parse(localStorage.getItem('apodFavorites') || '[]');
-                const newFavorite = { title: data.title, url: data.url, date: data.date };
-                if (!favorites.some(fav => fav.date === newFavorite.date)) {
-                    favorites.push(newFavorite);
-                    localStorage.setItem('apodFavorites', JSON.stringify(favorites));
-                    renderFavorites();
-                    alert('Added to favorites!');
-                } else {
-                    alert('This image is already in your favorites.');
-                }
-            };
-
-            // Social Sharing Button
-            let shareButton = apodSection.querySelector('.share-button');
-            if (!shareButton) {
-                shareButton = document.createElement('button');
-                shareButton.textContent = 'Share APOD';
-                shareButton.classList.add('share-button');
-                apodSection.appendChild(shareButton);
-            }
-            shareButton.onclick = async () => {
-                if (navigator.share) {
-                    try {
-                        await navigator.share({
-                            title: data.title,
-                            url: data.url,
-                        });
-                        console.log('APOD shared successfully');
-                    } catch (error) {
-                        console.error('Error sharing APOD:', error);
-                    }
-                } else {
-                    // Fallback for browsers that do not support Web Share API
-                    navigator.clipboard.writeText(data.url).then(() => {
-                        alert('APOD URL copied to clipboard!');
-                    }).catch(err => {
-                        console.error('Could not copy text: ', err);
-                    });
-                }
-            };
-
         } catch (error) {
             console.error('Error fetching APOD:', error);
+            if (CACHE_SUPPORTED) {
+                const cache = await caches.open(CACHE_NAME);
+                const cachedResponse = await cache.match(APOD_URL);
+                if (cachedResponse) {
+                    const data = await cachedResponse.json();
+                    displayApod(data, { offline: true });
+                    return;
+                }
+            }
+
             apodTitle.textContent = 'Failed to load APOD';
             apodDescription.textContent = `Error: ${error.message}. Please check your internet connection or API key.`;
-            apodImage.src = ''; // Clear image on error
-            apodImage.alt = 'Error loading image';
-
-            // Try to load from cache if offline
-            const cache = await caches.open(CACHE_NAME);
-            const cachedResponse = await cache.match(APOD_URL);
-            if (cachedResponse) {
-                const data = await cachedResponse.json();
-                apodTitle.textContent = `(Offline) ${data.title}`;
-                apodImage.src = data.url;
-                apodImage.alt = data.title;
-                apodDescription.textContent = `(Offline) ${data.explanation}`;
-                apodCopyright.textContent = data.copyright ? `(Offline) Image Credit: ${data.copyright}` : '';
-            } else {
-                apodTitle.textContent = 'Failed to load APOD';
-                apodDescription.textContent = `Error: ${error.message}. No cached data available.`;
-            }
+            apodCopyright.textContent = '';
+            showApodFallback('We could not reach NASA right now. Try again shortly or open the gallery on NASA.gov.');
         }
     }
+
     fetchApod();
 
     // Fetch ISS Location with caching
@@ -736,8 +1144,10 @@ document.addEventListener('DOMContentLoaded', () => {
             issLon.textContent = data.iss_position.longitude;
 
             // Cache ISS data
-            const cache = await caches.open(CACHE_NAME);
-            await cache.put(ISS_URL, new Response(JSON.stringify(data)));
+            if (CACHE_SUPPORTED) {
+                const cache = await caches.open(CACHE_NAME);
+                await cache.put(ISS_URL, new Response(JSON.stringify(data)));
+            }
 
         } catch (error) {
             console.error('Error fetching ISS location:', error);
@@ -745,16 +1155,19 @@ document.addEventListener('DOMContentLoaded', () => {
             issLon.textContent = 'Error';
 
             // Try to load from cache if offline
-            const cache = await caches.open(CACHE_NAME);
-            const cachedResponse = await cache.match(ISS_URL);
-            if (cachedResponse) {
-                const data = await cachedResponse.json();
-                issLat.textContent = `(Offline) ${data.iss_position.latitude}`;
-                issLon.textContent = `(Offline) ${data.iss_position.longitude}`;
-            } else {
-                issLat.textContent = 'N/A';
-                issLon.textContent = 'N/A';
+            if (CACHE_SUPPORTED) {
+                const cache = await caches.open(CACHE_NAME);
+                const cachedResponse = await cache.match(ISS_URL);
+                if (cachedResponse) {
+                    const data = await cachedResponse.json();
+                    issLat.textContent = `(Offline) ${data.iss_position.latitude}`;
+                    issLon.textContent = `(Offline) ${data.iss_position.longitude}`;
+                    return;
+                }
             }
+
+            issLat.textContent = 'N/A';
+            issLon.textContent = 'N/A';
         }
     }
 
@@ -831,24 +1244,61 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         favorites.forEach((fav, index) => {
-            const favItem = document.createElement('div');
-            favItem.classList.add('favorite-item');
-            favItem.innerHTML = `
-                <img src="${fav.url}" alt="${fav.title}" style="width: 100px; height: 100px; object-fit: cover;">
-                <p>${fav.title} (${fav.date})</p>
-                <button class="delete-favorite" data-index="${index}">Delete</button>
-            `;
-            favoritesList.appendChild(favItem);
-        });
+            const favoriteItem = document.createElement('div');
+            favoriteItem.classList.add('favorite-item');
 
-        document.querySelectorAll('.delete-favorite').forEach(button => {
-            button.onclick = (event) => {
-                const indexToDelete = event.target.dataset.index;
-                let favorites = JSON.parse(localStorage.getItem('apodFavorites') || '[]');
-                favorites.splice(indexToDelete, 1);
-                localStorage.setItem('apodFavorites', JSON.stringify(favorites));
+            const thumbnailWrapper = document.createElement('div');
+            thumbnailWrapper.classList.add('favorite-thumbnail');
+
+            const thumbnailImage = document.createElement('img');
+            const isVideo = (fav.media_type || '').toLowerCase() === 'video';
+            const thumbnailSource = fav.thumbnail_url || (!isVideo ? fav.url : '') || APOD_FALLBACK_IMAGE;
+            thumbnailImage.src = thumbnailSource;
+            thumbnailImage.alt = isVideo ? `${fav.title || 'APOD'} video preview` : (fav.title || 'APOD');
+            thumbnailImage.loading = 'lazy';
+            thumbnailImage.addEventListener('error', () => {
+                thumbnailImage.src = APOD_FALLBACK_IMAGE;
+            }, { once: true });
+            thumbnailWrapper.appendChild(thumbnailImage);
+
+            if (isVideo) {
+                const badge = document.createElement('span');
+                badge.classList.add('favorite-media-badge');
+                badge.textContent = 'Video';
+                thumbnailWrapper.appendChild(badge);
+            }
+
+            const favoriteInfo = document.createElement('div');
+            favoriteInfo.classList.add('favorite-info');
+
+            const favoriteTitle = document.createElement('p');
+            favoriteTitle.classList.add('favorite-title');
+            favoriteTitle.textContent = fav.title || 'Astronomy Picture of the Day';
+            favoriteInfo.appendChild(favoriteTitle);
+
+            if (fav.date) {
+                const favoriteDate = document.createElement('span');
+                favoriteDate.classList.add('favorite-date');
+                favoriteDate.textContent = fav.date;
+                favoriteInfo.appendChild(favoriteDate);
+            }
+
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-favorite');
+            deleteButton.dataset.index = index;
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', () => {
+                const storedFavorites = JSON.parse(localStorage.getItem('apodFavorites') || '[]');
+                storedFavorites.splice(index, 1);
+                localStorage.setItem('apodFavorites', JSON.stringify(storedFavorites));
                 renderFavorites();
-            };
+            });
+
+            favoriteItem.appendChild(thumbnailWrapper);
+            favoriteItem.appendChild(favoriteInfo);
+            favoriteItem.appendChild(deleteButton);
+
+            favoritesList.appendChild(favoriteItem);
         });
     }
     renderFavorites();
