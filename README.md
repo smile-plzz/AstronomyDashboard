@@ -39,6 +39,17 @@ This dashboard utilizes the following public APIs:
 *   All HTML, CSS, and JavaScript are contained within a single `index.html` file for simplicity and portability.
 *   API keys are embedded directly in the `index.html` file. For production environments, it is highly recommended to manage API keys more securely (e.g., via backend services or environment variables).
 
+## Suggested Improvements and Future Enhancements
+
+*   **Modularize the Codebase**: Break the monolithic `index.html` file into dedicated HTML, CSS, and JavaScript bundles or migrate to a lightweight build tool (e.g., Vite) for better maintainability and caching.
+*   **Harden API Interactions**: Introduce a small proxy backend or serverless functions to secure API keys, add caching, and handle rate limiting gracefully.
+*   **Progressive Web App (PWA) Support**: Add a web app manifest and service worker with smarter caching strategies so the dashboard can be installed and used reliably offline.
+*   **Accessibility Enhancements**: Audit color contrast, provide ARIA labels for dynamic content, and ensure keyboard navigation works across all interactive components.
+*   **User Personalization**: Allow users to configure default data sources (e.g., favorite rover, preferred events) and persist preferences via local storage or synced storage.
+*   **Observation Planner**: Offer a planner that combines local weather forecasts, light pollution data, and upcoming events to help users schedule viewing sessions.
+*   **Community Sharing**: Enable authenticated users to share curated observing lists or favorite APOD collections with friends via generated links.
+*   **Educational Mode**: Add contextual tooltips, glossary entries, and guided tours to help newcomers understand astronomical terms and visualizations.
+
 ## Contributing
 
 Feel free to fork this repository and contribute to its development.

@@ -52,3 +52,24 @@ The Astronomy Dashboard is designed as a single-page HTML site, delivering a lig
   - Share images or events via browser sharing (e.g., social media, email).
   - Fallback to copying URLs to clipboard.
   - Generate star chart snapshots as images for sharing.
+
+## Potential Future Features
+- **Dynamic Observation Planner**
+  - Combine astronomy events with localized weather and light pollution data to recommend optimal viewing times.
+  - Provide reminders or calendar exports so users can schedule observations.
+
+- **Community & Collaboration Tools**
+  - Allow users to create shareable observing lists or APOD collections via generated URLs or simple accounts.
+  - Add commenting or rating for community-sourced celestial events.
+
+- **Enhanced Personalization**
+  - Let users set preferred data sources (e.g., specific Mars rover, comet tracking) with local storage synchronization.
+  - Offer optional profiles to sync preferences across devices.
+
+- **Learning and Accessibility Mode**
+  - Include tooltips, glossary popovers, and narrated guides for newcomers.
+  - Improve keyboard navigation, focus management, and high-contrast themes for accessibility compliance.
+
+- **Platform Hardening**
+  - Introduce a backend proxy or serverless functions to protect API keys and cache responses.
+  - Bundle assets with a build pipeline for smaller payloads and easier maintenance.
