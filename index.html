@@ -5,78 +5,221 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Astronomy Dashboard</title>
     <style>
+:root {
+    --background: #f4f7f6;
+    --surface: #ffffff;
+    --surface-highlight: #f0f5ff;
+    --text-primary: #2c3e50;
+    --text-secondary: #4a6076;
+    --accent: #3498db;
+    --accent-strong: #1c6fb8;
+    --outline: #d6dce5;
+    --shadow-soft: 0 20px 45px rgba(31, 45, 61, 0.12);
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f7f6;
-    color: #333;
+    background-color: var(--background);
+    color: var(--text-secondary);
     transition: background-color 0.4s ease, color 0.4s ease;
     line-height: 1.6;
 }
 
 body.dark-mode {
-    background-color: #1a1a2e;
-    color: #e0e0e0;
+    --background: #0f172a;
+    --surface: #16213e;
+    --surface-highlight: #1f2d4d;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5f5;
+    --accent: #7ddffc;
+    --accent-strong: #59c5ef;
+    --outline: #253355;
+    --shadow-soft: 0 20px 45px rgba(5, 12, 24, 0.6);
 }
 
 header {
-    background-color: #2c3e50;
+    background: linear-gradient(135deg, #1c2541, #0b132b);
     color: #fff;
-    padding: 1.5rem 1rem;
-    text-align: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    padding: 2.5rem 1.5rem 2rem;
+    box-shadow: 0 18px 45px rgba(6, 16, 38, 0.35);
+}
+
+.header-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
 }
 
 h1 {
     margin: 0;
-    font-size: 2.5rem;
+    font-size: 2.6rem;
     letter-spacing: 1px;
 }
 
+.header-subtitle {
+    max-width: 720px;
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.12);
+    padding: 0.35rem 0.9rem;
+    font-size: 0.85rem;
+    color: #f8faff;
+}
+
+.header-actions button {
+    width: auto;
+}
+
 main {
-    padding: 1.5rem;
-    max-width: 1000px;
+    padding: 2.5rem 1.5rem 4rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.75rem;
+    max-width: 1100px;
     margin: 0 auto;
 }
 
-section {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-    padding: 2rem;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+section.card {
+    background-color: var(--surface);
+    border-radius: 18px;
+    box-shadow: var(--shadow-soft);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border: 1px solid var(--outline);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-body.dark-mode section {
-    background-color: #16213e;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+section.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 55px rgba(25, 38, 52, 0.18);
+    border-color: rgba(52, 152, 219, 0.4);
+}
+
+section.full-width {
+    grid-column: 1 / -1;
+}
+
+section.highlight {
+    background: linear-gradient(155deg, var(--surface), var(--surface-highlight));
 }
 
 h2 {
-    color: #34495e;
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    font-size: 1.8rem;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 0.5rem;
-}
-
-body.dark-mode h2 {
-    color: #e0e0e0;
-    border-bottom-color: #334a6d;
+    color: var(--text-primary);
+    margin: 0;
+    font-size: 1.55rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
 h3 {
-    color: #2980b9;
-    font-size: 1.4rem;
-    margin-top: 1rem;
-    margin-bottom: 0.8rem;
+    color: var(--accent);
+    font-size: 1.25rem;
+    margin: 0;
 }
 
-body.dark-mode h3 {
-    color: #7ddffc;
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.section-header h2 {
+    flex: 1 1 auto;
+}
+
+.input-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.input-row button {
+    margin-top: 0;
+}
+
+section.card p {
+    margin: 0 0 0.75rem 0;
+    color: var(--text-secondary);
+}
+
+section.card p:last-child {
+    margin-bottom: 0;
+}
+
+#nasaSearchInput {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--outline);
+    width: min(420px, 100%);
+    font-size: 1rem;
+    margin-right: 0.75rem;
+    background-color: var(--surface-highlight);
+    color: var(--text-primary);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#nasaSearchInput:focus {
+    outline: none;
+    border-color: rgba(52, 152, 219, 0.65);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+#nasaSearchResults {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.search-result {
+    background-color: rgba(15, 52, 96, 0.05);
+    border: 1px solid rgba(52, 152, 219, 0.2);
+    border-radius: 14px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-result:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 30px rgba(25, 38, 52, 0.16);
 }
 
 #apod img {
@@ -85,48 +228,50 @@ body.dark-mode h3 {
     display: block;
     margin: 1.5rem auto;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 14px 28px rgba(23, 31, 54, 0.22);
 }
 
 button {
-    background-color: #3498db;
-    color: white;
-    padding: 0.8rem 1.5rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    color: #fff;
+    padding: 0.75rem 1.55rem;
     border: none;
-    border-radius: 6px;
+    border-radius: 999px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
     margin-right: 0.5rem;
     margin-top: 0.5rem;
+    box-shadow: 0 12px 25px rgba(52, 152, 219, 0.35);
 }
 
 button:hover {
-    background-color: #2980b9;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 32px rgba(52, 152, 219, 0.45);
 }
 
-body.dark-mode button {
-    background-color: #0f3460;
+button.secondary {
+    background: none;
+    color: var(--accent);
+    border: 1px solid rgba(52, 152, 219, 0.4);
+    box-shadow: none;
 }
 
-body.dark-mode button:hover {
-    background-color: #1a527f;
+button.secondary:hover {
+    color: #fff;
+    background: var(--accent);
+    border-color: transparent;
 }
 
 footer {
     text-align: center;
-    padding: 1.5rem;
-    color: #7f8c8d;
-    font-size: 0.9rem;
-    background-color: #ecf0f1;
-    border-top: 1px solid #e0e0e0;
-}
-
-body.dark-mode footer {
-    color: #a0a0a0;
-    background-color: #0f3460;
-    border-top-color: #2c3e50;
+    padding: 2rem 1.5rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    background-color: var(--surface);
+    border-top: 1px solid var(--outline);
 }
 
 #favoritesList.collapsed {
@@ -137,25 +282,17 @@ body.dark-mode footer {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
-    border: 1px solid #e0e0e0;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    transition: background-color 0.3s ease;
-}
-
-body.dark-mode .favorite-item {
-    border-color: #334a6d;
-    background-color: #223a5e;
+    border: 1px solid var(--outline);
+    padding: 12px 14px;
+    border-radius: 12px;
+    background-color: rgba(52, 152, 219, 0.06);
+    box-shadow: inset 0 0 0 1px rgba(52, 152, 219, 0.08);
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .favorite-item:hover {
-    background-color: #eef;
-}
-
-body.dark-mode .favorite-item:hover {
-    background-color: #2a476e;
+    transform: translateY(-2px);
+    background-color: rgba(52, 152, 219, 0.12);
 }
 
 .favorite-item img {
@@ -169,22 +306,20 @@ body.dark-mode .favorite-item:hover {
 .favorite-item p {
     margin: 0;
     flex-grow: 1;
-    color: #555;
-}
-
-body.dark-mode .favorite-item p {
-    color: #c0c0c0;
+    color: var(--text-secondary);
 }
 
 .favorite-item button {
     margin-left: auto;
     padding: 0.6rem 1rem;
     font-size: 0.9rem;
-    background-color: #e74c3c;
+    background: linear-gradient(135deg, #f76b5c, #d63c2f);
+    box-shadow: 0 12px 24px rgba(231, 76, 60, 0.35);
 }
 
 .favorite-item button:hover {
-    background-color: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 30px rgba(231, 76, 60, 0.45);
 }
 
 #offline-banner {
@@ -207,42 +342,29 @@ body.dark-mode .favorite-item p {
 }
 
 #celestial-events li {
-    background-color: #ecf0f1;
+    background-color: rgba(52, 152, 219, 0.08);
     margin-bottom: 10px;
     padding: 12px 15px;
     border-radius: 8px;
-    border-left: 5px solid #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.25);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-body.dark-mode #celestial-events li {
-    background-color: #2c3e50;
-    border-left-color: #7ddffc;
-}
-
 #celestial-events li.past-event {
     opacity: 0.6;
-    border-left-color: #95a5a6;
+    border-color: rgba(149, 165, 166, 0.3);
 }
 
 #celestial-events li span {
     font-weight: bold;
-    color: #2c3e50;
-}
-
-body.dark-mode #celestial-events li span {
-    color: #e0e0e0;
+    color: var(--text-primary);
 }
 
 #celestial-events .event-date {
     font-size: 0.9em;
-    color: #7f8c8d;
-}
-
-body.dark-mode #celestial-events .event-date {
-    color: #a0a0a0;
+    color: var(--text-secondary);
 }
 
 #neoList ul {
@@ -251,58 +373,43 @@ body.dark-mode #celestial-events .event-date {
 }
 
 #neoList li {
-    background-color: #ecf0f1;
+    background-color: rgba(241, 196, 15, 0.12);
     margin-bottom: 10px;
     padding: 12px 15px;
     border-radius: 8px;
-    border-left: 5px solid #f39c12; /* A distinct color for NEOs */
-    transition: background-color 0.3s ease;
-}
-
-body.dark-mode #neoList li {
-    background-color: #2c3e50;
-    border-left-color: #e67e22;
+    border: 1px solid rgba(243, 156, 18, 0.3); /* A distinct color for NEOs */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 #neoList li:hover {
-    background-color: #e0e6e8;
-}
-
-body.dark-mode #neoList li:hover {
-    background-color: #3a506b;
+    transform: translateY(-3px);
+    box-shadow: 0 18px 32px rgba(243, 156, 18, 0.18);
 }
 
 #neoList li strong {
-    color: #34495e;
-}
-
-body.dark-mode #neoList li strong {
-    color: #e0e0e0;
+    color: var(--text-primary);
 }
 
 #neoList li p {
     margin: 5px 0 0 0;
     font-size: 0.9em;
-    color: #555;
-}
-
-body.dark-mode #neoList li p {
-    color: #c0c0c0;
+    color: var(--text-secondary);
 }
 
 #star-chart-display {
     width: 100%;
     height: 500px; /* Increased height for better visibility */
-    background-color: #000;
-    color: #fff;
+    background: radial-gradient(circle at top, rgba(125, 223, 252, 0.18), rgba(12, 27, 58, 0.95));
+    color: #f8fafc;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1.5rem;
-    border-radius: 8px;
+    border-radius: 16px;
     margin-top: 1.5rem;
     position: relative;
     overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(125, 223, 252, 0.15), 0 20px 45px rgba(0, 0, 0, 0.35);
 }
 
 #star-chart-display canvas {
@@ -322,9 +429,9 @@ body.dark-mode #neoList li p {
 
 #star-chart-controls {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 1rem;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 1.25rem;
     flex-wrap: wrap;
 }
 
@@ -332,7 +439,8 @@ body.dark-mode #neoList li p {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
+    gap: 1rem;
 }
 
 #currentRoverPhoto {
@@ -343,23 +451,19 @@ body.dark-mode #neoList li p {
 #roverImage {
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    box-shadow: 0 18px 38px rgba(19, 23, 45, 0.35);
 }
 
 .rover-navigation {
     display: flex;
-    gap: 10px;
+    gap: 12px;
 }
 
 #roverPhotoDetails {
     font-size: 0.9em;
-    color: #555;
+    color: var(--text-secondary);
     margin-top: 0.5rem;
-}
-
-body.dark-mode #roverPhotoDetails {
-    color: #c0c0c0;
 }
 
 #epicImageContainer {
@@ -371,74 +475,78 @@ body.dark-mode #roverPhotoDetails {
 }
 
 #epicImageContainer img {
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 8px;
+    border: 1px solid rgba(125, 223, 252, 0.25);
+    padding: 12px;
+    border-radius: 14px;
     text-align: center;
     width: 180px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-body.dark-mode #epicImageContainer img {
-    border-color: #334a6d;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 16px 30px rgba(12, 23, 54, 0.25);
 }
 
 #manual-location input[type="number"] {
-    padding: 0.6rem;
+    padding: 0.65rem 0.9rem;
     margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid var(--outline);
+    border-radius: 10px;
     font-size: 1rem;
-    width: 120px;
-    background-color: #f9f9f9;
-    color: #333;
+    width: 140px;
+    background-color: var(--surface-highlight);
+    color: var(--text-primary);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-body.dark-mode #manual-location input[type="number"] {
-    background-color: #2c3e50;
-    border-color: #334a6d;
-    color: #e0e0e0;
+#manual-location input[type="number"]:focus {
+    outline: none;
+    border-color: rgba(52, 152, 219, 0.65);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
 
 #manual-location label {
     margin-right: 5px;
-    font-weight: bold;
-    color: #555;
-}
-
-body.dark-mode #manual-location label {
-    color: #c0c0c0;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 #locationStatus, #manualLocationStatus {
     margin-top: 10px;
     font-style: italic;
-    color: #666;
+    color: var(--text-secondary);
 }
 
-body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
-    color: #a0a0a0;
+@media (max-width: 960px) {
+    .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 720px) {
+    header {
+        padding: 2.25rem 1.2rem 1.8rem;
+    }
     h1 {
-        font-size: 2rem;
+        font-size: 2.1rem;
     }
-    h2 {
-        font-size: 1.6rem;
+    .header-subtitle {
+        font-size: 0.98rem;
     }
-    section {
+    main {
+        padding: 2rem 1.2rem 3rem;
+    }
+    section.card {
         padding: 1.5rem;
-        margin-bottom: 1.5rem;
     }
     button {
-        padding: 0.7rem 1.2rem;
-        font-size: 0.9rem;
+        width: 100%;
+        margin-right: 0;
     }
     #manual-location input[type="number"] {
-        width: 100px;
-        margin-bottom: 10px;
+        width: 100%;
+        margin-right: 0;
     }
     #manual-location label {
         display: block;
@@ -448,74 +556,71 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
 
 @media (max-width: 480px) {
     h1 {
-        font-size: 1.8rem;
+        font-size: 1.85rem;
     }
-    h2 {
-        font-size: 1.4rem;
+    .dashboard-grid {
+        gap: 1.3rem;
     }
-    main {
-        padding: 1rem;
-    }
-    section {
-        padding: 1rem;
-        margin-bottom: 1rem;
-    }
-    button {
-        width: 100%;
-        margin-right: 0;
-    }
-    #manual-location input[type="number"] {
-        width: calc(100% - 22px); /* Account for padding and border */
-        margin-right: 0;
-    }
-    #star-chart-controls button {
-        width: auto;
+    #star-chart-display {
+        height: 360px;
     }
 }
     </style>
 </head>
 <body>
     <header>
-        <h1>Astronomy Dashboard</h1>
-        <button id="darkModeToggle">Toggle Dark Mode</button>
+        <div class="header-content">
+            <div class="header-top">
+                <div>
+                    <h1>Astronomy Dashboard</h1>
+                    <p class="header-subtitle">Explore daily NASA highlights, follow spacecraft, and stay ready for the next big celestial moment with a refined command center.</p>
+                </div>
+                <div class="header-actions">
+                    <span class="pill">Live NASA feeds</span>
+                    <span class="pill">Offline aware</span>
+                    <button id="darkModeToggle" class="secondary">Toggle Dark Mode</button>
+                </div>
+            </div>
+        </div>
     </header>
     <main>
-        <section id="apod">
+        <div class="dashboard-grid">
+        <section id="apod" class="card highlight full-width">
             <h2>Astronomy Picture of the Day</h2>
             <h3 id="apodTitle"></h3>
             <img id="apodImage" src="" alt="Astronomy Picture of the Day">
             <p id="apodDescription"></p>
             <p id="apodCopyright"></p>
         </section>
-        <section id="iss-location">
+        <section id="iss-location" class="card">
             <h2>International Space Station (ISS) Location</h2>
             <p>Latitude: <span id="issLat"></span></p>
             <p>Longitude: <span id="issLon"></span></p>
         </section>
-        <section id="moon-phase">
+        <section id="moon-phase" class="card">
             <h2>Current Moon Phase</h2>
             <p id="moonPhaseText"></p>
         </section>
-        <section id="user-location">
+        <section id="user-location" class="card">
             <h2>Your Location</h2>
             <p>Latitude: <span id="userLat">N/A</span></p>
             <p>Longitude: <span id="userLon">N/A</span></p>
             <p id="locationStatus"></p>
         </section>
-        <section id="celestial-events">
+        <section id="celestial-events" class="card full-width">
             <h2>Upcoming Celestial Events</h2>
             <ul id="eventsList">
             </ul>
         </section>
 
-        <section id="neo-data">
+        <section id="neo-data" class="card">
             <h2>Near Earth Objects (NEOs)</h2>
             <div id="neoList">
                 <p>Loading Near Earth Object data...</p>
             </div>
         </section>
 
-        <section id="mars-rover-photos">
+        <section id="mars-rover-photos" class="card full-width">
             <h2>Mars Rover Photos</h2>
             <div id="roverPhotosContainer">
                 <div id="currentRoverPhoto">
@@ -529,28 +634,30 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
             </div>
         </section>
 
-        <section id="epic-images">
+        <section id="epic-images" class="card">
             <h2>Earth Polychromatic Imaging Camera (EPIC) Images</h2>
             <div id="epicImageContainer">
                 <p>Loading EPIC images...</p>
             </div>
         </section>
 
-        <section id="astronomy-fact">
+        <section id="astronomy-fact" class="card">
             <h2>Astronomy Fact of the Day</h2>
             <p id="factTitle"></p>
             <p id="factDescription"></p>
             <button id="newFactButton">New Fact</button>
         </section>
 
-        <section id="nasa-image-video-search">
+        <section id="nasa-image-video-search" class="card full-width">
             <h2>NASA Image and Video Library Search</h2>
-            <input type="text" id="nasaSearchInput" placeholder="Search for images or videos...">
-            <button id="nasaSearchButton">Search</button>
+            <div class="input-row">
+                <input type="text" id="nasaSearchInput" placeholder="Search for images or videos...">
+                <button id="nasaSearchButton">Search</button>
+            </div>
             <div id="nasaSearchResults"></div>
         </section>
 
-        <section id="star-chart">
+        <section id="star-chart" class="card full-width">
             <h2>Interactive Star Chart</h2>
             <div id="star-chart-display">
                 <p>Star chart will appear here.</p>
@@ -559,18 +666,16 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
                 <button id="refreshStarChart">Refresh Star Chart</button>
             </div>
         </section>
-
-
-
-
-        
-        <section id="favorites">
-            <h2>Your Favorites <button id="toggleFavorites">Show/Hide</button></h2>
+        <section id="favorites" class="card">
+            <div class="section-header">
+                <h2>Your Favorites</h2>
+                <button id="toggleFavorites" class="secondary">Show/Hide</button>
+            </div>
             <div id="favoritesList" class="collapsed">
                 <p>No favorites saved yet.</p>
             </div>
         </section>
-        <section id="manual-location">
+        <section id="manual-location" class="card">
             <h2>Manual Location Input</h2>
             <label for="manualLat">Latitude:</label>
             <input type="number" id="manualLat" placeholder="e.g., 34.05" step="0.01">
@@ -579,7 +684,8 @@ body.dark-mode #locationStatus, body.dark-mode #manualLocationStatus {
             <button id="saveLocation">Save Location</button>
             <p id="manualLocationStatus"></p>
         </section>
-        </main>
+        </div>
+    </main>
     <footer>
         <p>&copy; 2025 Astronomy Dashboard</p>
     </footer>
