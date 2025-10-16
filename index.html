@@ -853,7 +853,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const APOD_URL = `https://api.nasa.gov/planetary/apod?thumbs=true&api_key=${NASA_API_KEY}`;
     const ISS_URL = 'http://api.open-notify.org/iss-now.json';
     const CACHE_NAME = 'astronomy-dashboard-cache-v1';
+    const CACHE_SUPPORTED = 'caches' in window;
     const APOD_FALLBACK_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMTYwIj4KPHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxNjAiIHJ4PSIxNiIgZmlsbD0iIzFjMjU0MSIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iNDgiIGZpbGw9IiMzNDk4ZGIiIG9wYWNpdHk9IjAuNjUiLz4KPHRleHQgeD0iMTAwIiB5PSI5MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IidTZWdvZSBVSScsIFRhaG9tYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCIgZmlsbD0id2hpdGUiPkFQT0Q8L3RleHQ+Cjwvc3ZnPg==';
+
+    if (!CACHE_SUPPORTED) {
+        console.info('Cache API is unavailable in this context; offline content reuse will be limited.');
+    }
 
     // Dark Mode Toggle
     const darkModeToggle = document.getElementById('darkModeToggle');
@@ -1096,21 +1101,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
             displayApod(data);
 
-            const cache = await caches.open(CACHE_NAME);
-            await cache.put(APOD_URL, new Response(JSON.stringify(data)));
+            if (CACHE_SUPPORTED) {
+                const cache = await caches.open(CACHE_NAME);
+                await cache.put(APOD_URL, new Response(JSON.stringify(data)));
+            }
         } catch (error) {
             console.error('Error fetching APOD:', error);
-            const cache = await caches.open(CACHE_NAME);
-            const cachedResponse = await cache.match(APOD_URL);
-            if (cachedResponse) {
-                const data = await cachedResponse.json();
-                displayApod(data, { offline: true });
-            } else {
-                apodTitle.textContent = 'Failed to load APOD';
-                apodDescription.textContent = `Error: ${error.message}. Please check your internet connection or API key.`;
-                apodCopyright.textContent = '';
-                showApodFallback('We could not reach NASA right now. Try again shortly or open the gallery on NASA.gov.');
+            if (CACHE_SUPPORTED) {
+                const cache = await caches.open(CACHE_NAME);
+                const cachedResponse = await cache.match(APOD_URL);
+                if (cachedResponse) {
+                    const data = await cachedResponse.json();
+                    displayApod(data, { offline: true });
+                    return;
+                }
             }
+
+            apodTitle.textContent = 'Failed to load APOD';
+            apodDescription.textContent = `Error: ${error.message}. Please check your internet connection or API key.`;
+            apodCopyright.textContent = '';
+            showApodFallback('We could not reach NASA right now. Try again shortly or open the gallery on NASA.gov.');
         }
     }
 
@@ -1134,8 +1144,10 @@ document.addEventListener('DOMContentLoaded', () => {
             issLon.textContent = data.iss_position.longitude;
 
             // Cache ISS data
-            const cache = await caches.open(CACHE_NAME);
-            await cache.put(ISS_URL, new Response(JSON.stringify(data)));
+            if (CACHE_SUPPORTED) {
+                const cache = await caches.open(CACHE_NAME);
+                await cache.put(ISS_URL, new Response(JSON.stringify(data)));
+            }
 
         } catch (error) {
             console.error('Error fetching ISS location:', error);
@@ -1143,16 +1155,19 @@ document.addEventListener('DOMContentLoaded', () => {
             issLon.textContent = 'Error';
 
             // Try to load from cache if offline
-            const cache = await caches.open(CACHE_NAME);
-            const cachedResponse = await cache.match(ISS_URL);
-            if (cachedResponse) {
-                const data = await cachedResponse.json();
-                issLat.textContent = `(Offline) ${data.iss_position.latitude}`;
-                issLon.textContent = `(Offline) ${data.iss_position.longitude}`;
-            } else {
-                issLat.textContent = 'N/A';
-                issLon.textContent = 'N/A';
+            if (CACHE_SUPPORTED) {
+                const cache = await caches.open(CACHE_NAME);
+                const cachedResponse = await cache.match(ISS_URL);
+                if (cachedResponse) {
+                    const data = await cachedResponse.json();
+                    issLat.textContent = `(Offline) ${data.iss_position.latitude}`;
+                    issLon.textContent = `(Offline) ${data.iss_position.longitude}`;
+                    return;
+                }
             }
+
+            issLat.textContent = 'N/A';
+            issLon.textContent = 'N/A';
         }
     }
 
