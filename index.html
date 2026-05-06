@@ -3,1685 +3,1407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Astronomy Dashboard</title>
+    <title>Astronomy Dashboard - NASA Space Explorer</title>
     <style>
-:root {
-    --background: #f4f7f6;
-    --surface: #ffffff;
-    --surface-highlight: #f0f5ff;
-    --text-primary: #2c3e50;
-    --text-secondary: #4a6076;
-    --accent: #3498db;
-    --accent-strong: #1c6fb8;
-    --outline: #d6dce5;
-    --shadow-soft: 0 20px 45px rgba(31, 45, 61, 0.12);
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: var(--background);
-    color: var(--text-secondary);
-    transition: background-color 0.4s ease, color 0.4s ease;
-    line-height: 1.6;
-}
-
-body.dark-mode {
-    --background: #0f172a;
-    --surface: #16213e;
-    --surface-highlight: #1f2d4d;
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5f5;
-    --accent: #7ddffc;
-    --accent-strong: #59c5ef;
-    --outline: #253355;
-    --shadow-soft: 0 20px 45px rgba(5, 12, 24, 0.6);
-}
-
-header {
-    background: linear-gradient(135deg, #1c2541, #0b132b);
-    color: #fff;
-    padding: 2.5rem 1.5rem 2rem;
-    box-shadow: 0 18px 45px rgba(6, 16, 38, 0.35);
-}
-
-.header-content {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.header-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-}
-
-h1 {
-    margin: 0;
-    font-size: 2.6rem;
-    letter-spacing: 1px;
-}
-
-.header-subtitle {
-    max-width: 720px;
-    margin: 0;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.85);
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    border-radius: 999px;
-    background-color: rgba(255, 255, 255, 0.12);
-    padding: 0.35rem 0.9rem;
-    font-size: 0.85rem;
-    color: #f8faff;
-}
-
-.header-actions button {
-    width: auto;
-}
-
-main {
-    padding: 2.5rem 1.5rem 4rem;
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.75rem;
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-section.card {
-    background-color: var(--surface);
-    border-radius: 18px;
-    box-shadow: var(--shadow-soft);
-    padding: 1.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    border: 1px solid var(--outline);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-section.card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 24px 55px rgba(25, 38, 52, 0.18);
-    border-color: rgba(52, 152, 219, 0.4);
-}
-
-section.full-width {
-    grid-column: 1 / -1;
-}
-
-section.highlight {
-    background: linear-gradient(155deg, var(--surface), var(--surface-highlight));
-}
-
-h2 {
-    color: var(--text-primary);
-    margin: 0;
-    font-size: 1.55rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-}
-
-h3 {
-    color: var(--accent);
-    font-size: 1.25rem;
-    margin: 0;
-}
-
-.apod-heading {
-    margin-top: 0.5rem;
-    color: var(--text-primary);
-    font-size: 1.3rem;
-}
-
-.section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.section-header h2 {
-    flex: 1 1 auto;
-}
-
-.input-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    align-items: center;
-    margin-top: 0.5rem;
-}
-
-.input-row button {
-    margin-top: 0;
-}
-
-section.card p {
-    margin: 0 0 0.75rem 0;
-    color: var(--text-secondary);
-}
-
-section.card p:last-child {
-    margin-bottom: 0;
-}
-
-#nasaSearchInput {
-    padding: 0.75rem 1rem;
-    border-radius: 12px;
-    border: 1px solid var(--outline);
-    width: min(420px, 100%);
-    font-size: 1rem;
-    margin-right: 0.75rem;
-    background-color: var(--surface-highlight);
-    color: var(--text-primary);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-#nasaSearchInput:focus {
-    outline: none;
-    border-color: rgba(52, 152, 219, 0.65);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-}
-
-#nasaSearchResults {
-    margin-top: 1.5rem;
-    display: grid;
-    gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.search-result {
-    background-color: rgba(15, 52, 96, 0.05);
-    border: 1px solid rgba(52, 152, 219, 0.2);
-    border-radius: 14px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.search-result:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 18px 30px rgba(25, 38, 52, 0.16);
-}
-
-.apod-media {
-    position: relative;
-    width: 100%;
-    border-radius: 16px;
-    overflow: hidden;
-    background: linear-gradient(135deg, rgba(76, 110, 245, 0.18), rgba(15, 23, 42, 0.35));
-    background-size: cover;
-    background-position: center;
-    box-shadow: 0 14px 28px rgba(23, 31, 54, 0.22);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 260px;
-}
-
-.apod-media.is-video {
-    background: radial-gradient(circle at top, rgba(125, 223, 252, 0.18), rgba(15, 23, 42, 0.75));
-}
-
-.apod-media img,
-.apod-media iframe {
-    width: 100%;
-    border-radius: inherit;
-}
-
-.apod-media img {
-    height: auto;
-    display: block;
-    object-fit: cover;
-}
-
-.apod-media iframe {
-    aspect-ratio: 16 / 9;
-    border: 0;
-    background-color: #000;
-}
-
-.apod-fallback {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1.75rem;
-    text-align: center;
-    gap: 1rem;
-    background: rgba(15, 23, 42, 0.85);
-    color: #e2e8f0;
-}
-
-.apod-fallback p {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-.apod-fallback-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-}
-
-.apod-fallback a {
-    color: var(--accent);
-    font-weight: 600;
-    text-decoration: none;
-    padding: 0.65rem 1.4rem;
-    border-radius: 999px;
-    background-color: rgba(125, 223, 252, 0.12);
-    border: 1px solid rgba(125, 223, 252, 0.35);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-}
-
-.apod-fallback a:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(125, 223, 252, 0.25);
-    background-color: rgba(125, 223, 252, 0.22);
-}
-
-.apod-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
-}
-
-.apod-actions button {
-    margin: 0;
-}
-
-.hidden {
-    display: none !important;
-}
-
-button {
-    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-    color: #fff;
-    padding: 0.75rem 1.55rem;
-    border: none;
-    border-radius: 999px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    margin-right: 0.5rem;
-    margin-top: 0.5rem;
-    box-shadow: 0 12px 25px rgba(52, 152, 219, 0.35);
-}
-
-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 16px 32px rgba(52, 152, 219, 0.45);
-}
-
-button:disabled,
-button:disabled:hover {
-    opacity: 0.55;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-button.secondary {
-    background: none;
-    color: var(--accent);
-    border: 1px solid rgba(52, 152, 219, 0.4);
-    box-shadow: none;
-}
-
-button.secondary:hover {
-    color: #fff;
-    background: var(--accent);
-    border-color: transparent;
-}
-
-footer {
-    text-align: center;
-    padding: 2rem 1.5rem;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    background-color: var(--surface);
-    border-top: 1px solid var(--outline);
-}
-
-#favoritesList.collapsed {
-    display: none;
-}
-
-.favorite-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 15px;
-    border: 1px solid var(--outline);
-    padding: 12px 16px;
-    border-radius: 14px;
-    background-color: rgba(52, 152, 219, 0.06);
-    box-shadow: inset 0 0 0 1px rgba(52, 152, 219, 0.08);
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.favorite-item:hover {
-    transform: translateY(-2px);
-    background-color: rgba(52, 152, 219, 0.12);
-}
-
-.favorite-thumbnail {
-    width: 82px;
-    height: 82px;
-    border-radius: 12px;
-    overflow: hidden;
-    flex-shrink: 0;
-    position: relative;
-    background: linear-gradient(145deg, rgba(52, 152, 219, 0.25), rgba(76, 110, 245, 0.15));
-}
-
-.favorite-thumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.favorite-media-badge {
-    position: absolute;
-    bottom: 6px;
-    left: 6px;
-    background: rgba(15, 23, 42, 0.85);
-    color: #fff;
-    font-size: 0.65rem;
-    letter-spacing: 0.06em;
-    padding: 0.15rem 0.45rem;
-    border-radius: 999px;
-    text-transform: uppercase;
-}
-
-.favorite-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    color: var(--text-secondary);
-}
-
-.favorite-title {
-    margin: 0;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.favorite-date {
-    font-size: 0.85rem;
-    letter-spacing: 0.02em;
-}
-
-.favorite-item button {
-    margin-left: auto;
-    margin-right: 0;
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-    background: linear-gradient(135deg, #f76b5c, #d63c2f);
-    box-shadow: 0 12px 24px rgba(231, 76, 60, 0.35);
-}
-
-.favorite-item button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 16px 30px rgba(231, 76, 60, 0.45);
-}
-
-#offline-banner {
-    background-color: #f39c12;
-    color: #fff;
-    text-align: center;
-    padding: 12px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: none; /* Hidden by default */
-    z-index: 1000;
-    font-weight: bold;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-}
-
-#celestial-events ul {
-    list-style: none;
-    padding: 0;
-}
-
-#celestial-events li {
-    background-color: rgba(52, 152, 219, 0.08);
-    margin-bottom: 10px;
-    padding: 12px 15px;
-    border-radius: 8px;
-    border: 1px solid rgba(52, 152, 219, 0.25);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#celestial-events li.past-event {
-    opacity: 0.6;
-    border-color: rgba(149, 165, 166, 0.3);
-}
-
-#celestial-events li span {
-    font-weight: bold;
-    color: var(--text-primary);
-}
-
-#celestial-events .event-date {
-    font-size: 0.9em;
-    color: var(--text-secondary);
-}
-
-#neoList ul {
-    list-style: none;
-    padding: 0;
-}
-
-#neoList li {
-    background-color: rgba(241, 196, 15, 0.12);
-    margin-bottom: 10px;
-    padding: 12px 15px;
-    border-radius: 8px;
-    border: 1px solid rgba(243, 156, 18, 0.3); /* A distinct color for NEOs */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-#neoList li:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 18px 32px rgba(243, 156, 18, 0.18);
-}
-
-#neoList li strong {
-    color: var(--text-primary);
-}
-
-#neoList li p {
-    margin: 5px 0 0 0;
-    font-size: 0.9em;
-    color: var(--text-secondary);
-}
-
-#star-chart-display {
-    width: 100%;
-    height: 500px; /* Increased height for better visibility */
-    background: radial-gradient(circle at top, rgba(125, 223, 252, 0.18), rgba(12, 27, 58, 0.95));
-    color: #f8fafc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem;
-    border-radius: 16px;
-    margin-top: 1.5rem;
-    position: relative;
-    overflow: hidden;
-    box-shadow: inset 0 0 0 1px rgba(125, 223, 252, 0.15), 0 20px 45px rgba(0, 0, 0, 0.35);
-}
-
-#star-chart-display canvas {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-#star-chart-display img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.7;
-}
-
-#star-chart-controls {
-    display: flex;
-    justify-content: flex-start;
-    gap: 12px;
-    margin-top: 1.25rem;
-    flex-wrap: wrap;
-}
-
-#roverPhotosContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 1.25rem;
-    gap: 1rem;
-}
-
-#currentRoverPhoto {
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-#roverImage {
-    max-width: 100%;
-    height: auto;
-    border-radius: 12px;
-    box-shadow: 0 18px 38px rgba(19, 23, 45, 0.35);
-}
-
-.rover-navigation {
-    display: flex;
-    gap: 12px;
-}
-
-#roverPhotoDetails {
-    font-size: 0.9em;
-    color: var(--text-secondary);
-    margin-top: 0.5rem;
-}
-
-#epicImageContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 1.5rem;
-}
-
-#epicImageContainer img {
-    border: 1px solid rgba(125, 223, 252, 0.25);
-    padding: 12px;
-    border-radius: 14px;
-    text-align: center;
-    width: 180px;
-    box-shadow: 0 16px 30px rgba(12, 23, 54, 0.25);
-}
-
-#manual-location input[type="number"] {
-    padding: 0.65rem 0.9rem;
-    margin-right: 10px;
-    border: 1px solid var(--outline);
-    border-radius: 10px;
-    font-size: 1rem;
-    width: 140px;
-    background-color: var(--surface-highlight);
-    color: var(--text-primary);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-#manual-location input[type="number"]:focus {
-    outline: none;
-    border-color: rgba(52, 152, 219, 0.65);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-}
-
-#manual-location label {
-    margin-right: 5px;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-#locationStatus, #manualLocationStatus {
-    margin-top: 10px;
-    font-style: italic;
-    color: var(--text-secondary);
-}
-
-@media (max-width: 960px) {
-    .header-top {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .header-actions {
-        width: 100%;
-        justify-content: space-between;
-    }
-}
-
-@media (max-width: 720px) {
-    header {
-        padding: 2.25rem 1.2rem 1.8rem;
-    }
-    h1 {
-        font-size: 2.1rem;
-    }
-    .header-subtitle {
-        font-size: 0.98rem;
-    }
-    main {
-        padding: 2rem 1.2rem 3rem;
-    }
-    section.card {
-        padding: 1.5rem;
-    }
-    button {
-        width: 100%;
-        margin-right: 0;
-    }
-    #manual-location input[type="number"] {
-        width: 100%;
-        margin-right: 0;
-    }
-    #manual-location label {
-        display: block;
-        margin-bottom: 5px;
-    }
-}
-
-@media (max-width: 480px) {
-    h1 {
-        font-size: 1.85rem;
-    }
-    .dashboard-grid {
-        gap: 1.3rem;
-    }
-    #star-chart-display {
-        height: 360px;
-    }
-}
-    </style>
-</head>
-<body>
-    <header>
-        <div class="header-content">
-            <div class="header-top">
-                <div>
-                    <h1>Astronomy Dashboard</h1>
-                    <p class="header-subtitle">Explore daily NASA highlights, follow spacecraft, and stay ready for the next big celestial moment with a refined command center.</p>
-                </div>
-                <div class="header-actions">
-                    <span class="pill">Live NASA feeds</span>
-                    <span class="pill">Offline aware</span>
-                    <button id="darkModeToggle" class="secondary">Toggle Dark Mode</button>
-                </div>
-            </div>
-        </div>
-    </header>
-    <main>
-        <div class="dashboard-grid">
-        <section id="apod" class="card highlight full-width">
-            <h2>Astronomy Picture of the Day</h2>
-            <h3 id="apodTitle" class="apod-heading"></h3>
-            <div class="apod-media" id="apodMediaWrapper">
-                <img id="apodImage" src="" alt="Astronomy Picture of the Day" loading="lazy" decoding="async" class="hidden">
-                <iframe id="apodVideo" title="Astronomy Picture of the Day video" class="hidden" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                <div id="apodFallback" class="apod-fallback hidden" role="alert">
-                    <p id="apodFallbackText">We couldn't load today's featured media.</p>
-                    <div class="apod-fallback-actions">
-                        <button id="retryApod" type="button" class="secondary">Retry</button>
-                        <a id="apodExternalLink" href="https://apod.nasa.gov/apod/astropix.html" target="_blank" rel="noopener">Open on NASA.gov</a>
-                    </div>
-                </div>
-            </div>
-            <p id="apodDescription"></p>
-            <p id="apodCopyright"></p>
-            <div class="apod-actions">
-                <button id="apodFavoriteButton" type="button" disabled>Add to Favorites</button>
-                <button id="apodShareButton" type="button" class="secondary" disabled>Share APOD</button>
-            </div>
-        </section>
-        <section id="iss-location" class="card">
-            <h2>International Space Station (ISS) Location</h2>
-            <p>Latitude: <span id="issLat"></span></p>
-            <p>Longitude: <span id="issLon"></span></p>
-        </section>
-        <section id="moon-phase" class="card">
-            <h2>Current Moon Phase</h2>
-            <p id="moonPhaseText"></p>
-        </section>
-        <section id="user-location" class="card">
-            <h2>Your Location</h2>
-            <p>Latitude: <span id="userLat">N/A</span></p>
-            <p>Longitude: <span id="userLon">N/A</span></p>
-            <p id="locationStatus"></p>
-        </section>
-        <section id="celestial-events" class="card full-width">
-            <h2>Upcoming Celestial Events</h2>
-            <ul id="eventsList">
-            </ul>
-        </section>
-
-        <section id="neo-data" class="card">
-            <h2>Near Earth Objects (NEOs)</h2>
-            <div id="neoList">
-                <p>Loading Near Earth Object data...</p>
-            </div>
-        </section>
-
-        <section id="mars-rover-photos" class="card full-width">
-            <h2>Mars Rover Photos</h2>
-            <div id="roverPhotosContainer">
-                <div id="currentRoverPhoto">
-                    <img id="roverImage" src="" alt="Mars Rover Photo">
-                    <p id="roverPhotoDetails"></p>
-                </div>
-                <div class="rover-navigation">
-                    <button id="prevRoverPhoto">Previous</button>
-                    <button id="nextRoverPhoto">Next</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="epic-images" class="card">
-            <h2>Earth Polychromatic Imaging Camera (EPIC) Images</h2>
-            <div id="epicImageContainer">
-                <p>Loading EPIC images...</p>
-            </div>
-        </section>
-
-        <section id="astronomy-fact" class="card">
-            <h2>Astronomy Fact of the Day</h2>
-            <p id="factTitle"></p>
-            <p id="factDescription"></p>
-            <button id="newFactButton">New Fact</button>
-        </section>
-
-        <section id="nasa-image-video-search" class="card full-width">
-            <h2>NASA Image and Video Library Search</h2>
-            <div class="input-row">
-                <input type="text" id="nasaSearchInput" placeholder="Search for images or videos...">
-                <button id="nasaSearchButton">Search</button>
-            </div>
-            <div id="nasaSearchResults"></div>
-        </section>
-
-        <section id="star-chart" class="card full-width">
-            <h2>Interactive Star Chart</h2>
-            <div id="star-chart-display">
-                <p>Star chart will appear here.</p>
-            </div>
-            <div id="star-chart-controls">
-                <button id="refreshStarChart">Refresh Star Chart</button>
-            </div>
-        </section>
-        <section id="favorites" class="card">
-            <div class="section-header">
-                <h2>Your Favorites</h2>
-                <button id="toggleFavorites" class="secondary">Show/Hide</button>
-            </div>
-            <div id="favoritesList" class="collapsed">
-                <p>No favorites saved yet.</p>
-            </div>
-        </section>
-        <section id="manual-location" class="card">
-            <h2>Manual Location Input</h2>
-            <label for="manualLat">Latitude:</label>
-            <input type="number" id="manualLat" placeholder="e.g., 34.05" step="0.01">
-            <label for="manualLon">Longitude:</label>
-            <input type="number" id="manualLon" placeholder="e.g., -118.25" step="0.01">
-            <button id="saveLocation">Save Location</button>
-            <p id="manualLocationStatus"></p>
-        </section>
-        </div>
-    </main>
-    <footer>
-        <p>&copy; 2025 Astronomy Dashboard</p>
-    </footer>
-
-    <div id="offline-banner">You are currently offline. Some features may be limited.</div>
-
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-celestial@0.7.3/celestial.min.js"></script>
-    <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const NASA_API_KEY = 'tIrqLSEdCCAzLNSihVNlIKqhiFhHW3gZIWD5cUXj';
-    const APOD_URL = `https://api.nasa.gov/planetary/apod?thumbs=true&api_key=${NASA_API_KEY}`;
-    const ISS_URL = 'http://api.open-notify.org/iss-now.json';
-    const CACHE_NAME = 'astronomy-dashboard-cache-v1';
-    const CACHE_SUPPORTED = 'caches' in window;
-    const APOD_FALLBACK_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMTYwIj4KPHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxNjAiIHJ4PSIxNiIgZmlsbD0iIzFjMjU0MSIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iNDgiIGZpbGw9IiMzNDk4ZGIiIG9wYWNpdHk9IjAuNjUiLz4KPHRleHQgeD0iMTAwIiB5PSI5MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IidTZWdvZSBVSScsIFRhaG9tYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCIgZmlsbD0id2hpdGUiPkFQT0Q8L3RleHQ+Cjwvc3ZnPg==';
-
-    if (!CACHE_SUPPORTED) {
-        console.info('Cache API is unavailable in this context; offline content reuse will be limited.');
-    }
-
-    // Dark Mode Toggle
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    // Set dark mode as default
-    document.body.classList.add('dark-mode');
-    localStorage.setItem('darkMode', 'enabled');
-
-    
-
-    darkModeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        if (document.body.classList.contains('dark-mode')) {
-            localStorage.setItem('darkMode', 'enabled');
-        } else {
-            localStorage.setItem('darkMode', 'disabled');
-        }
-    });
-
-    const apodTitle = document.getElementById('apodTitle');
-    const apodImage = document.getElementById('apodImage');
-    const apodVideo = document.getElementById('apodVideo');
-    const apodDescription = document.getElementById('apodDescription');
-    const apodCopyright = document.getElementById('apodCopyright');
-    const apodMediaWrapper = document.getElementById('apodMediaWrapper');
-    const apodFallback = document.getElementById('apodFallback');
-    const apodFallbackText = document.getElementById('apodFallbackText');
-    const apodExternalLink = document.getElementById('apodExternalLink');
-    const retryApodButton = document.getElementById('retryApod');
-    const apodFavoriteButton = document.getElementById('apodFavoriteButton');
-    const apodShareButton = document.getElementById('apodShareButton');
-
-    let currentApodData = null;
-
-    function resetApodMedia() {
-        apodImage.classList.add('hidden');
-        apodImage.removeAttribute('src');
-        apodImage.alt = '';
-        apodVideo.classList.add('hidden');
-        apodVideo.removeAttribute('src');
-        apodVideo.removeAttribute('title');
-        apodMediaWrapper.classList.remove('is-video');
-        apodMediaWrapper.style.backgroundImage = '';
-        apodFallback.classList.add('hidden');
-    }
-
-    function showApodFallback(message, linkUrl = 'https://apod.nasa.gov/apod/astropix.html') {
-        apodImage.classList.add('hidden');
-        apodImage.removeAttribute('src');
-        apodVideo.classList.add('hidden');
-        apodVideo.removeAttribute('src');
-        apodVideo.removeAttribute('title');
-        apodMediaWrapper.classList.remove('is-video');
-        apodMediaWrapper.style.backgroundImage = '';
-        apodFallbackText.textContent = message;
-        apodFallback.classList.remove('hidden');
-        if (linkUrl) {
-            apodExternalLink.href = linkUrl;
-        }
-    }
-
-    function getEmbeddableVideoUrl(url) {
-        if (!url) {
-            return '';
-        }
-        try {
-            const parsed = new URL(url);
-            if (parsed.hostname.includes('youtube.com')) {
-                if (parsed.pathname === '/watch') {
-                    const videoId = parsed.searchParams.get('v');
-                    if (videoId) {
-                        const params = new URLSearchParams();
-                        if (parsed.searchParams.get('list')) {
-                            params.set('list', parsed.searchParams.get('list'));
-                        }
-                        const start = parsed.searchParams.get('start') || parsed.searchParams.get('t');
-                        if (start) {
-                            params.set('start', start);
-                        }
-                        const paramString = params.toString();
-                        return `https://www.youtube.com/embed/${videoId}${paramString ? `?${paramString}` : ''}`;
-                    }
-                }
-                if (parsed.pathname.startsWith('/embed/')) {
-                    return url;
-                }
-            }
-            if (parsed.hostname === 'youtu.be') {
-                const videoId = parsed.pathname.replace('/', '');
-                const paramString = parsed.search ? parsed.search : '';
-                return `https://www.youtube.com/embed/${videoId}${paramString}`;
-            }
-            return url;
-        } catch (error) {
-            console.warn('Unable to parse APOD video URL:', error);
-            return url;
-        }
-    }
-
-    function displayApod(data, { offline = false } = {}) {
-        resetApodMedia();
-        currentApodData = data;
-
-        const prefix = offline ? '(Offline) ' : '';
-        const titleText = data.title || 'Astronomy Picture of the Day';
-        const descriptionText = data.explanation || 'No description is available for this entry.';
-        apodTitle.textContent = `${prefix}${titleText}`;
-        apodDescription.textContent = offline ? `${prefix}${descriptionText}` : descriptionText;
-        apodCopyright.textContent = data.copyright ? `${prefix}Image Credit: ${data.copyright}` : '';
-        apodExternalLink.href = data.url || 'https://apod.nasa.gov/apod/astropix.html';
-
-        const imageUrl = data.hdurl || data.url || data.thumbnail_url || '';
-        const shareUrl = data.media_type === 'image' ? (data.hdurl || data.url) : data.url;
-        const thumbnailUrl = data.media_type === 'video'
-            ? (data.thumbnail_url || APOD_FALLBACK_IMAGE)
-            : (data.url || data.hdurl || APOD_FALLBACK_IMAGE);
-
-        if (data.media_type === 'video') {
-            const embedUrl = getEmbeddableVideoUrl(data.url);
-            if (embedUrl) {
-                apodVideo.src = embedUrl;
-                apodVideo.title = `${titleText} video`;
-                apodVideo.classList.remove('hidden');
-                apodMediaWrapper.classList.add('is-video');
-                if (thumbnailUrl) {
-                    apodMediaWrapper.style.backgroundImage = `url("${thumbnailUrl}")`;
-                }
-            } else if (thumbnailUrl) {
-                apodImage.src = thumbnailUrl;
-                apodImage.alt = `${titleText} video preview`;
-                apodImage.classList.remove('hidden');
-                apodMediaWrapper.classList.add('is-video');
-            } else {
-                showApodFallback("Today's APOD is a video that must be viewed on NASA.gov.", data.url || 'https://apod.nasa.gov/apod/astropix.html');
-            }
-        } else if (imageUrl) {
-            apodImage.src = imageUrl;
-            apodImage.alt = titleText;
-            apodImage.classList.remove('hidden');
-        } else {
-            showApodFallback("We couldn't locate a displayable image for today's APOD.", data.url || 'https://apod.nasa.gov/apod/astropix.html');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        const hasSharableMedia = Boolean(shareUrl);
-        apodFavoriteButton.disabled = !hasSharableMedia;
-        apodShareButton.disabled = !hasSharableMedia;
-    }
-
-    apodImage.addEventListener('error', () => {
-        if (!apodImage.getAttribute('src')) {
-            return;
-        }
-        const fallbackLink = currentApodData && currentApodData.url ? currentApodData.url : 'https://apod.nasa.gov/apod/astropix.html';
-        showApodFallback("We couldn't display today's image. Try again soon or open it directly on NASA.gov.", fallbackLink);
-    });
-
-    retryApodButton.addEventListener('click', () => {
-        retryApodButton.disabled = true;
-        fetchApod().finally(() => {
-            retryApodButton.disabled = false;
-        });
-    });
-
-    apodFavoriteButton.addEventListener('click', () => {
-        if (!currentApodData) {
-            return;
-        }
-        const favorites = JSON.parse(localStorage.getItem('apodFavorites') || '[]');
-        const mediaUrl = currentApodData.media_type === 'image'
-            ? (currentApodData.hdurl || currentApodData.url)
-            : currentApodData.url;
-        const thumbnailUrl = currentApodData.media_type === 'video'
-            ? (currentApodData.thumbnail_url || APOD_FALLBACK_IMAGE)
-            : (currentApodData.url || currentApodData.hdurl || APOD_FALLBACK_IMAGE);
-
-        const newFavorite = {
-            title: currentApodData.title || 'Astronomy Picture of the Day',
-            url: mediaUrl || '',
-            date: currentApodData.date || new Date().toISOString().split('T')[0],
-            media_type: currentApodData.media_type,
-            thumbnail_url: thumbnailUrl || APOD_FALLBACK_IMAGE,
-        };
-
-        if (!favorites.some(fav => fav.date === newFavorite.date)) {
-            favorites.push(newFavorite);
-            localStorage.setItem('apodFavorites', JSON.stringify(favorites));
-            renderFavorites();
-            alert('Added to favorites!');
-        } else {
-            alert('This APOD is already in your favorites.');
-        }
-    });
-
-    apodShareButton.addEventListener('click', async () => {
-        if (!currentApodData) {
-            return;
-        }
-        const shareUrl = currentApodData.media_type === 'image'
-            ? (currentApodData.hdurl || currentApodData.url)
-            : currentApodData.url;
-
-        if (!shareUrl) {
-            alert('This item cannot be shared right now.');
-            return;
+        :root {
+            --primary-bg: #0a0e27;
+            --secondary-bg: #1a1f3a;
+            --tertiary-bg: #252d47;
+            --accent-cyan: #00d9ff;
+            --accent-blue: #0080ff;
+            --accent-purple: #7c3aed;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --border-color: rgba(0, 217, 255, 0.2);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
 
-        try {
-            if (navigator.share) {
-                await navigator.share({
-                    title: currentApodData.title,
-                    text: currentApodData.explanation || 'Astronomy Picture of the Day',
-                    url: shareUrl,
-                });
-            } else {
-                await navigator.clipboard.writeText(shareUrl);
-                alert('APOD link copied to clipboard!');
-            }
-        } catch (error) {
-            console.error('Error sharing APOD:', error);
-            alert('Sharing was canceled or not available.');
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #0f1535 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
         }
-    });
 
-    // Fetch APOD with caching
-    async function fetchApod() {
-        currentApodData = null;
-        apodFavoriteButton.disabled = true;
-        apodShareButton.disabled = true;
-        apodTitle.textContent = 'Loading Astronomy Picture of the Day...';
-        apodDescription.textContent = '';
-        apodCopyright.textContent = '';
-        apodExternalLink.href = 'https://apod.nasa.gov/apod/astropix.html';
-        resetApodMedia();
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 60px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 50px 50px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 10px, #fff, rgba(0,0,0,0));
+            background-size: 200px 200px;
+            background-repeat: repeat;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1;
+        }
 
-        try {
-            const response = await fetch(APOD_URL);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-            displayApod(data);
+        /* Header */
+        header {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(0, 128, 255, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 217, 255, 0.1);
+        }
 
-            if (CACHE_SUPPORTED) {
-                const cache = await caches.open(CACHE_NAME);
-                await cache.put(APOD_URL, new Response(JSON.stringify(data)));
-            }
-        } catch (error) {
-            console.error('Error fetching APOD:', error);
-            if (CACHE_SUPPORTED) {
-                const cache = await caches.open(CACHE_NAME);
-                const cachedResponse = await cache.match(APOD_URL);
-                if (cachedResponse) {
-                    const data = await cachedResponse.json();
-                    displayApod(data, { offline: true });
-                    return;
-                }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 40px;
+        }
+
+        .title-text h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .title-text p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .header-time {
+            text-align: right;
+        }
+
+        .header-time .time {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            font-family: 'Courier New', monospace;
+        }
+
+        .header-time .date {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: rgba(26, 31, 58, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            background: rgba(0, 217, 255, 0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-color: var(--accent-cyan);
+            color: var(--primary-bg);
+            font-weight: 600;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .grid.full {
+            grid-template-columns: 1fr;
+        }
+
+        /* Cards */
+        .card {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.8) 0%, rgba(37, 45, 71, 0.5) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 8px 32px rgba(0, 217, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        .card-icon {
+            font-size: 20px;
+        }
+
+        .card-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            padding: 40px 20px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error State */
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            border-radius: 8px;
+            padding: 15px;
+            color: #fca5a5;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+
+        .success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            border-radius: 8px;
+            padding: 15px;
+            color: #86efac;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+
+        /* Image Gallery */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .image-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            aspect-ratio: 16 / 9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .image-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-item:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .image-title {
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        table thead {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table th {
+            color: var(--accent-cyan);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        table tr:hover {
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border: none;
+            color: var(--primary-bg);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 217, 255, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Input Styles */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 15px;
+            background: rgba(37, 45, 71, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        input[type="text"]::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: rgba(37, 45, 71, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
             }
 
-            apodTitle.textContent = 'Failed to load APOD';
-            apodDescription.textContent = `Error: ${error.message}. Please check your internet connection or API key.`;
-            apodCopyright.textContent = '';
-            showApodFallback('We could not reach NASA right now. Try again shortly or open the gallery on NASA.gov.');
-        }
-    }
-
-    fetchApod();
-
-    // Fetch ISS Location with caching
-    async function fetchIssLocation() {
-        const issLat = document.getElementById('issLat');
-        const issLon = document.getElementById('issLon');
-
-        issLat.textContent = 'Loading...';
-        issLon.textContent = 'Loading...';
-
-        try {
-            const response = await fetch(ISS_URL);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            issLat.textContent = data.iss_position.latitude;
-            issLon.textContent = data.iss_position.longitude;
-
-            // Cache ISS data
-            if (CACHE_SUPPORTED) {
-                const cache = await caches.open(CACHE_NAME);
-                await cache.put(ISS_URL, new Response(JSON.stringify(data)));
+            .header-content {
+                flex-direction: column;
             }
 
-        } catch (error) {
-            console.error('Error fetching ISS location:', error);
-            issLat.textContent = 'Error';
-            issLon.textContent = 'Error';
+            .header-time {
+                text-align: left;
+            }
 
-            // Try to load from cache if offline
-            if (CACHE_SUPPORTED) {
-                const cache = await caches.open(CACHE_NAME);
-                const cachedResponse = await cache.match(ISS_URL);
-                if (cachedResponse) {
-                    const data = await cachedResponse.json();
-                    issLat.textContent = `(Offline) ${data.iss_position.latitude}`;
-                    issLon.textContent = `(Offline) ${data.iss_position.longitude}`;
-                    return;
-                }
+            .title-text h1 {
+                font-size: 24px;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .modal-content {
+                padding: 20px;
             }
 
             issLat.textContent = 'N/A';
             issLon.textContent = 'N/A';
         }
-    }
 
-    fetchIssLocation();
-    setInterval(fetchIssLocation, 5000); // Update every 5 seconds
-
-    // Moon Phase Calculation (simplified)
-    function calculateMoonPhase() {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1; // Month is 0-indexed
-        const day = date.getDate();
-
-        let lp = 29.530588;
-        let new_moon = new Date(2000, 0, 6, 18, 30, 0); // New moon on Jan 6, 2000, 18:30 UT
-        let phase = ((date.getTime() - new_moon.getTime()) / (1000 * 60 * 60 * 24)) % lp;
-
-        let phaseText = '';
-        if (phase < 1.84566) phaseText = 'New Moon';
-        else if (phase < 5.53699) phaseText = 'Waxing Crescent';
-        else if (phase < 9.22831) phaseText = 'First Quarter';
-        else if (phase < 12.91963) phaseText = 'Waxing Gibbous';
-        else if (phase < 16.61096) phaseText = 'Full Moon';
-        else if (phase < 20.30228) phaseText = 'Waning Gibbous';
-        else if (phase < 23.99361) phaseText = 'Last Quarter';
-        else if (phase < 27.68493) phaseText = 'Waning Crescent';
-        else phaseText = 'New Moon';
-
-        document.getElementById('moonPhaseText').textContent = phaseText;
-    }
-
-    calculateMoonPhase();
-
-    // User Location
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                document.getElementById('userLat').textContent = position.coords.latitude.toFixed(2);
-                document.getElementById('userLon').textContent = position.coords.longitude.toFixed(2);
-                document.getElementById('locationStatus').textContent = 'Location retrieved successfully.';
-                // Update manual location inputs with geo-located values
-                document.getElementById('manualLat').value = position.coords.latitude.toFixed(2);
-                document.getElementById('manualLon').value = position.coords.longitude.toFixed(2);
-            },
-            (error) => {
-                document.getElementById('locationStatus').textContent = `Error getting location: ${error.message}`;
-                console.error('Error getting user location:', error);
-            }
-        );
-    } else {
-        document.getElementById('locationStatus').textContent = 'Geolocation is not supported by your browser.';
-    }
-
-    // Favorites Collapsible List
-    const toggleFavoritesButton = document.getElementById('toggleFavorites');
-    const favoritesListDiv = document.getElementById('favoritesList');
-
-    toggleFavoritesButton.addEventListener('click', () => {
-        favoritesListDiv.classList.toggle('collapsed');
-        if (favoritesListDiv.classList.contains('collapsed')) {
-            toggleFavoritesButton.textContent = 'Show/Hide';
-        } else {
-            toggleFavoritesButton.textContent = 'Hide';
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
         }
-    });
 
-    // Favorites
-    function renderFavorites() {
-        const favorites = JSON.parse(localStorage.getItem('apodFavorites') || '[]');
-        const favoritesList = document.getElementById('favoritesList');
-        favoritesList.innerHTML = '';
-        if (favorites.length === 0) {
-            favoritesList.innerHTML = '<p>No favorites saved yet.</p>';
-            return;
+        .badge-cyan {
+            background: rgba(0, 217, 255, 0.2);
+            color: var(--accent-cyan);
         }
-        favorites.forEach((fav, index) => {
-            const favoriteItem = document.createElement('div');
-            favoriteItem.classList.add('favorite-item');
 
-            const thumbnailWrapper = document.createElement('div');
-            thumbnailWrapper.classList.add('favorite-thumbnail');
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
 
-            const thumbnailImage = document.createElement('img');
-            const isVideo = (fav.media_type || '').toLowerCase() === 'video';
-            const thumbnailSource = fav.thumbnail_url || (!isVideo ? fav.url : '') || APOD_FALLBACK_IMAGE;
-            thumbnailImage.src = thumbnailSource;
-            thumbnailImage.alt = isVideo ? `${fav.title || 'APOD'} video preview` : (fav.title || 'APOD');
-            thumbnailImage.loading = 'lazy';
-            thumbnailImage.addEventListener('error', () => {
-                thumbnailImage.src = APOD_FALLBACK_IMAGE;
-            }, { once: true });
-            thumbnailWrapper.appendChild(thumbnailImage);
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
 
-            if (isVideo) {
-                const badge = document.createElement('span');
-                badge.classList.add('favorite-media-badge');
-                badge.textContent = 'Video';
-                thumbnailWrapper.appendChild(badge);
-            }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
 
-            const favoriteInfo = document.createElement('div');
-            favoriteInfo.classList.add('favorite-info');
+        /* Scroll */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
 
-            const favoriteTitle = document.createElement('p');
-            favoriteTitle.classList.add('favorite-title');
-            favoriteTitle.textContent = fav.title || 'Astronomy Picture of the Day';
-            favoriteInfo.appendChild(favoriteTitle);
+        ::-webkit-scrollbar-track {
+            background: var(--primary-bg);
+        }
 
-            if (fav.date) {
-                const favoriteDate = document.createElement('span');
-                favoriteDate.classList.add('favorite-date');
-                favoriteDate.textContent = fav.date;
-                favoriteInfo.appendChild(favoriteDate);
-            }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-cyan);
+            border-radius: 4px;
+        }
 
-            const deleteButton = document.createElement('button');
-            deleteButton.classList.add('delete-favorite');
-            deleteButton.dataset.index = index;
-            deleteButton.textContent = 'Delete';
-            deleteButton.addEventListener('click', () => {
-                const storedFavorites = JSON.parse(localStorage.getItem('apodFavorites') || '[]');
-                storedFavorites.splice(index, 1);
-                localStorage.setItem('apodFavorites', JSON.stringify(storedFavorites));
-                renderFavorites();
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-content">
+                <div class="header-title">
+                    <div class="logo">🚀</div>
+                    <div class="title-text">
+                        <h1>Astronomy Dashboard</h1>
+                        <p>Explore the Universe with NASA Data</p>
+                    </div>
+                </div>
+                <div class="header-time">
+                    <div class="time" id="current-time">00:00:00</div>
+                    <div class="date" id="current-date">Loading...</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="apod">📸 Picture of Day</button>
+            <button class="nav-tab" data-tab="mars-rover">🚗 Mars Rover</button>
+            <button class="nav-tab" data-tab="nasa-images">🔍 NASA Images</button>
+            <button class="nav-tab" data-tab="iss-tracker">🛰️ ISS Tracker</button>
+            <button class="nav-tab" data-tab="near-earth">🪨 Near Earth Objects</button>
+            <button class="nav-tab" data-tab="solar-data">☀️ Solar Data</button>
+            <button class="nav-tab" data-tab="planets">🌍 Planets Info</button>
+            <button class="nav-tab" data-tab="moon">🌙 Moon Calendar</button>
+            <button class="nav-tab" data-tab="space-news">📰 Space News</button>
+        </div>
+
+        <!-- APOD Section -->
+        <div class="content-section active" id="apod">
+            <div class="card full">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Astronomy Picture of the Day</div>
+                        <div class="card-icon">📸</div>
+                    </div>
+                    <div class="input-group">
+                        <input type="date" id="apod-date" value="">
+                        <button class="btn" onclick="loadAPOD()">Load</button>
+                    </div>
+                </div>
+                <div id="apod-content" class="loading">
+                    <div class="spinner"></div>
+                    <span>Loading APOD...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mars Rover Section -->
+        <div class="content-section" id="mars-rover">
+            <div class="card full">
+                <div class="card-header">
+                    <div class="card-title">Mars Rover Photos</div>
+                    <div class="input-group">
+                        <select id="rover-select" onchange="loadMarsRover()">
+                            <option value="curiosity">Curiosity</option>
+                            <option value="opportunity">Opportunity</option>
+                            <option value="spirit">Spirit</option>
+                        </select>
+                        <input type="number" id="mars-sol" placeholder="Sol (day)" value="1000" min="0">
+                        <button class="btn" onclick="loadMarsRover()">Load</button>
+                    </div>
+                </div>
+                <div id="mars-content" class="loading">
+                    <div class="spinner"></div>
+                    <span>Loading Mars photos...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- NASA Images Section -->
+        <div class="content-section" id="nasa-images">
+            <div class="card full">
+                <div class="card-header">
+                    <div class="card-title">NASA Image Library Search</div>
+                    <div class="input-group">
+                        <input type="text" id="search-query" placeholder="Search (e.g., galaxy, nebula, earth)..." value="galaxy">
+                        <button class="btn" onclick="searchNasaImages()">Search</button>
+                    </div>
+                </div>
+                <div id="nasa-images-content" class="loading">
+                    <div class="spinner"></div>
+                    <span>Ready to search...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ISS Tracker Section -->
+        <div class="content-section" id="iss-tracker">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">ISS Location</div>
+                        <div class="card-icon">🛰️</div>
+                    </div>
+                    <div id="iss-content" class="loading">
+                        <div class="spinner"></div>
+                        <span>Loading ISS data...</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Current Crew in Space</div>
+                        <div class="card-icon">👨‍🚀</div>
+                    </div>
+                    <div id="astronauts-content" class="loading">
+                        <div class="spinner"></div>
+                        <span>Loading crew data...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Near Earth Objects -->
+        <div class="content-section" id="near-earth">
+            <div class="card full">
+                <div class="card-header">
+                    <div class="card-title">Near-Earth Objects (Asteroids)</div>
+                    <div class="input-group">
+                        <input type="date" id="neo-start-date" value="">
+                        <input type="date" id="neo-end-date" value="">
+                        <button class="btn" onclick="loadNEO()">Load</button>
+                    </div>
+                </div>
+                <div id="neo-content" class="loading">
+                    <div class="spinner"></div>
+                    <span>Loading NEO data...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solar Data Section -->
+        <div class="content-section" id="solar-data">
+            <div class="grid full">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Solar Events & Flares</div>
+                        <div class="card-icon">☀️</div>
+                    </div>
+                    <div id="solar-content" class="loading">
+                        <div class="spinner"></div>
+                        <span>Loading solar data...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Planets Info -->
+        <div class="content-section" id="planets">
+            <div class="grid">
+                <div id="planets-container"></div>
+            </div>
+        </div>
+
+        <!-- Moon Calendar -->
+        <div class="content-section" id="moon">
+            <div class="card full">
+                <div class="card-header">
+                    <div class="card-title">Moon Phase Calendar</div>
+                    <div class="input-group">
+                        <input type="date" id="moon-date" value="">
+                        <button class="btn" onclick="loadMoonPhase()">Load</button>
+                    </div>
+                </div>
+                <div id="moon-content" class="loading">
+                    <div class="spinner"></div>
+                    <span>Loading moon data...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Space News -->
+        <div class="content-section" id="space-news">
+            <div class="card full">
+                <div class="card-header">
+                    <div class="card-title">Latest Space News & Discoveries</div>
+                    <div class="card-icon">📰</div>
+                </div>
+                <div id="news-content" class="loading">
+                    <div class="spinner"></div>
+                    <span>Loading space news...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for image viewing -->
+    <div class="modal" id="image-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeImageModal()">&times;</button>
+            <img id="modal-image" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">
+            <div id="modal-description"></div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_KEY = 'xzOxe6cxHsSI3ogU7tGLfqD0pa7WzyRlaCGAVUin';
+        const NASA_API = 'https://api.nasa.gov';
+        const OPEN_NOTIFY_API = 'https://api.open-notify.org';
+
+        // Tab Navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
+                switchTab(tabName);
             });
-
-            favoriteItem.appendChild(thumbnailWrapper);
-            favoriteItem.appendChild(favoriteInfo);
-            favoriteItem.appendChild(deleteButton);
-
-            favoritesList.appendChild(favoriteItem);
         });
-    }
-    renderFavorites();
 
-    // Manual Location Input
-    const saveLocationButton = document.getElementById('saveLocation');
-    saveLocationButton.addEventListener('click', () => {
-        const manualLat = document.getElementById('manualLat').value;
-        const manualLon = document.getElementById('manualLon').value;
+        function switchTab(tabName) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
 
-        if (manualLat && manualLon) {
-            localStorage.setItem('manualLat', manualLat);
-            localStorage.setItem('manualLon', manualLon);
-            document.getElementById('manualLocationStatus').textContent = 'Manual location saved!';
-            document.getElementById('userLat').textContent = parseFloat(manualLat).toFixed(2);
-            document.getElementById('userLon').textContent = parseFloat(manualLon).toFixed(2);
-        } else {
-            document.getElementById('manualLocationStatus').textContent = 'Please enter both latitude and longitude.';
+            // Load data when tab is switched
+            switch(tabName) {
+                case 'apod':
+                    loadAPOD();
+                    break;
+                case 'mars-rover':
+                    loadMarsRover();
+                    break;
+                case 'iss-tracker':
+                    loadISSData();
+                    break;
+                case 'near-earth':
+                    loadNEO();
+                    break;
+                case 'solar-data':
+                    loadSolarData();
+                    break;
+                case 'planets':
+                    loadPlanets();
+                    break;
+                case 'moon':
+                    loadMoonPhase();
+                    break;
+                case 'space-news':
+                    loadSpaceNews();
+                    break;
+            }
         }
-    });
 
-    // Load manual location if available
-    const savedLat = localStorage.getItem('manualLat');
-    const savedLon = localStorage.getItem('manualLon');
-    if (savedLat && savedLon) {
-        document.getElementById('userLat').textContent = parseFloat(savedLat).toFixed(2);
-        document.getElementById('userLon').textContent = parseFloat(savedLon).toFixed(2);
-        document.getElementById('locationStatus').textContent = 'Using saved manual location.';
-        document.getElementById('manualLat').value = savedLat;
-        document.getElementById('manualLon').value = savedLon;
-    }
-
-    // Offline Mode Banner
-    const offlineBanner = document.getElementById('offline-banner');
-
-    function updateOnlineStatus() {
-        if (navigator.onLine) {
-            offlineBanner.style.display = 'none';
-        } else {
-            offlineBanner.style.display = 'block';
+        // Update current time and date
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleTimeString();
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
         }
-    }
 
-    window.addEventListener('online', updateOnlineStatus);
-    window.addEventListener('offline', updateOnlineStatus);
+        setInterval(updateTime, 1000);
+        updateTime();
 
-    updateOnlineStatus(); // Initial check
+        // Set default dates
+        function setDefaultDates() {
+            const today = new Date();
+            const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+            const twoDaysAgo = new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000);
 
-    // Celestial Events (more dynamic)
-    const celestialEvents = [];
+            document.getElementById('apod-date').valueAsDate = today;
+            document.getElementById('neo-start-date').valueAsDate = yesterday;
+            document.getElementById('neo-end-date').valueAsDate = today;
+            document.getElementById('moon-date').valueAsDate = today;
+        }
 
-    async function fetchCelestialEvents() {
-        const eventsList = document.getElementById('eventsList');
-        eventsList.innerHTML = '<p>Loading celestial events...</p>';
+        setDefaultDates();
 
-        const today = new Date();
-        const startDate = new Date();
-        startDate.setDate(today.getDate() - 30); // Get events from the last 30 days
+        // ============ APOD ============
+        async function loadAPOD() {
+            const content = document.getElementById('apod-content');
+            const date = document.getElementById('apod-date').value;
 
-        const formattedStartDate = startDate.toISOString().split('T')[0];
-        const formattedEndDate = today.toISOString().split('T')[0];
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><span>Loading APOD...</span></div>';
 
-        const DONKI_API_URL_FLR = `https://api.nasa.gov/DONKI/FLR?startDate=${formattedStartDate}&endDate=${formattedEndDate}&api_key=${NASA_API_KEY}`;
-        const DONKI_API_URL_CME = `https://api.nasa.gov/DONKI/CMEAnalysis?startDate=${formattedStartDate}&endDate=${formattedEndDate}&mostAccurateOnly=true&speed=500&halfAngle=30&catalog=ALL&api_key=${NASA_API_KEY}`;
+            try {
+                const response = await fetch(`${NASA_API}/planetary/apod?api_key=${API_KEY}&date=${date}`);
+                if (!response.ok) throw new Error('Failed to fetch APOD');
+                
+                const data = await response.json();
+                
+                let html = '<div style="margin-top: 15px;">';
+                
+                if (data.media_type === 'image') {
+                    html += `<img src="${data.url}" style="width: 100%; border-radius: 8px; margin-bottom: 15px; cursor: pointer;" onclick="openImageModal('${data.url}', '${data.title}')">`;
+                } else if (data.media_type === 'video') {
+                    html += `<iframe width="100%" height="400" src="${data.url}" frameborder="0" allowfullscreen style="border-radius: 8px; margin-bottom: 15px;"></iframe>`;
+                }
+                
+                html += `
+                    <div style="border-left: 3px solid var(--accent-cyan); padding-left: 15px; margin-top: 15px;">
+                        <h3 style="color: var(--accent-cyan); margin-bottom: 10px;">${data.title}</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">${data.explanation}</p>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px; font-size: 13px; color: var(--text-secondary);">
+                            <div><strong style="color: var(--accent-cyan);">Date:</strong> ${data.date}</div>
+                            <div><strong style="color: var(--accent-cyan);">Copyright:</strong> ${data.copyright || 'NASA'}</div>
+                        </div>
+                    </div>
+                </div>`;
+                
+                content.innerHTML = html;
+            } catch (error) {
+                content.innerHTML = `<div class="error">Error loading APOD: ${error.message}</div>`;
+            }
+        }
 
-        try {
-            const [flrResponse, cmeResponse] = await Promise.all([
-                fetch(DONKI_API_URL_FLR),
-                fetch(DONKI_API_URL_CME)
-            ]);
+        // ============ MARS ROVER ============
+        async function loadMarsRover() {
+            const content = document.getElementById('mars-content');
+            const rover = document.getElementById('rover-select').value;
+            const sol = document.getElementById('mars-sol').value;
 
-            const flrData = await flrResponse.json();
-            const cmeData = await cmeResponse.json();
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><span>Loading Mars photos...</span></div>';
 
-            let allEvents = [];
+            try {
+                const response = await fetch(`${NASA_API}/mars-photos/api/v1/rovers/${rover}/photos?sol=${sol}&api_key=${API_KEY}`);
+                if (!response.ok) throw new Error('Failed to fetch Mars photos');
+                
+                const data = await response.json();
+                
+                if (!data.photos || data.photos.length === 0) {
+                    content.innerHTML = `<div class="error">No photos found for ${rover} on sol ${sol}. Try a different sol number.</div>`;
+                    return;
+                }
 
-            flrData.forEach(event => {
-                allEvents.push({
-                    name: `Solar Flare (FLR) - Class ${event.classType}`,
-                    date: event.beginTime,
-                    link: event.link
+                let html = `<div style="margin-top: 15px;">
+                    <div style="margin-bottom: 15px; color: var(--text-secondary);">
+                        Found <strong style="color: var(--accent-cyan);">${data.photos.length}</strong> photos from ${rover}
+                    </div>
+                    <div class="image-gallery">`;
+                
+                data.photos.slice(0, 12).forEach(photo => {
+                    html += `
+                        <div class="image-item">
+                            <img src="${photo.img_src}" alt="Mars rover photo">
+                            <div class="image-overlay">
+                                <div class="image-title">${photo.camera.full_name}</div>
+                            </div>
+                        </div>`;
                 });
-            });
+                
+                html += '</div></div>';
+                content.innerHTML = html;
+            } catch (error) {
+                content.innerHTML = `<div class="error">Error loading Mars photos: ${error.message}</div>`;
+            }
+        }
 
-            cmeData.forEach(event => {
-                allEvents.push({
-                    name: `Coronal Mass Ejection (CME) - ${event.type}`,
-                    date: event.time,
-                    link: event.link
-                });
-            });
+        // ============ NASA IMAGES ============
+        async function searchNasaImages() {
+            const content = document.getElementById('nasa-images-content');
+            const query = document.getElementById('search-query').value.trim();
 
-            allEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            eventsList.innerHTML = ''; // Clear loading message
-
-            if (allEvents.length > 0) {
-                allEvents.forEach(event => {
-                    const eventDate = new Date(event.date);
-                    const listItem = document.createElement('li');
-                    listItem.innerHTML = `
-                        <span>${event.name}</span>
-                        <span class="event-date">${eventDate.toDateString()}</span>
-                        ${event.link ? `<a href="${event.link}" target="_blank">Details</a>` : ''}
-                    `;
-                    eventsList.appendChild(listItem);
-                });
-            } else {
-                eventsList.innerHTML = '<p>No celestial events found for the last 30 days.</p>';
+            if (!query) {
+                content.innerHTML = '<div class="error">Please enter a search query</div>';
+                return;
             }
 
-        } catch (error) {
-            console.error('Error fetching celestial events:', error);
-            eventsList.innerHTML = `<p>Failed to load celestial events: ${error.message}.</p>`;
-        }
-    }
-    fetchCelestialEvents();
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><span>Searching NASA images...</span></div>';
 
-    // Near Earth Objects (NEOs)
-    async function fetchNeoData() {
-        const neoListDiv = document.getElementById('neoList');
-        neoListDiv.innerHTML = '<p>Loading Near Earth Object data...</p>';
+            try {
+                const response = await fetch(`https://images-api.nasa.gov/search?q=${encodeURIComponent(query)}&media_type=image&page=1`);
+                if (!response.ok) throw new Error('Search failed');
+                
+                const data = await response.json();
+                const items = data.collection.items;
 
-        const today = new Date();
-        const endDate = today.toISOString().split('T')[0];
-        const startDate = new Date(today);
-        startDate.setDate(today.getDate() - 7); // Get NEOs for the last 7 days
-        const formattedStartDate = startDate.toISOString().split('T')[0];
+                if (items.length === 0) {
+                    content.innerHTML = '<div class="error">No images found. Try a different search term.</div>';
+                    return;
+                }
 
-        const NEO_API_URL = `https://api.nasa.gov/neo/rest/v1/feed?start_date=${formattedStartDate}&end_date=${endDate}&api_key=${NASA_API_KEY}`;
-
-        try {
-            const response = await fetch(NEO_API_URL);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                let html = `<div style="margin-top: 15px;">
+                    <div style="margin-bottom: 15px; color: var(--text-secondary);">
+                        Found <strong style="color: var(--accent-cyan);">${items.length}</strong> results for "${query}"
+                    </div>
+                    <div class="image-gallery">`;
+                
+                items.slice(0, 12).forEach(item => {
+                    const imageUrl = item.links && item.links[0] ? item.links[0].href : '';
+                    const title = item.data[0] && item.data[0].title ? item.data[0].title : 'NASA Image';
+                    
+                    if (imageUrl) {
+                        html += `
+                            <div class="image-item">
+                                <img src="${imageUrl}" alt="${title}">
+                                <div class="image-overlay">
+                                    <div class="image-title">${title.substring(0, 50)}...</div>
+                                </div>
+                            </div>`;
+                    }
+                });
+                
+                html += '</div></div>';
+                content.innerHTML = html;
+            } catch (error) {
+                content.innerHTML = `<div class="error">Error searching images: ${error.message}</div>`;
             }
-            const data = await response.json();
+        }
 
-            neoListDiv.innerHTML = ''; // Clear loading message
+        // ============ ISS TRACKER ============
+        async function loadISSData() {
+            const issContent = document.getElementById('iss-content');
+            const astronautsContent = document.getElementById('astronauts-content');
 
-            if (data.near_earth_objects) {
-                let neoHtml = '<h3>Potentially Hazardous NEOs (Last 7 Days):</h3><ul>';
-                let foundNeos = false;
+            issContent.innerHTML = '<div class="loading"><div class="spinner"></div><span>Loading ISS data...</span></div>';
+            astronautsContent.innerHTML = '<div class="loading"><div class="spinner"></div><span>Loading crew data...</span></div>';
 
-                for (const date in data.near_earth_objects) {
-                    data.near_earth_objects[date].forEach(neo => {
-                        if (neo.is_potentially_hazardous_asteroid) {
-                            foundNeos = true;
-                            neoHtml += `
-                                <li>
-                                    <strong>${neo.name}</strong><br>
-                                    Approach Date: ${date}<br>
-                                    Miss Distance: ${parseFloat(neo.close_approach_data[0].miss_distance.kilometers).toFixed(2)} km<br>
-                                    Relative Velocity: ${parseFloat(neo.close_approach_data[0].relative_velocity.kilometers_per_second).toFixed(2)} km/s<br>
-                                    Est. Diameter: ${parseFloat(neo.estimated_diameter.kilometers.estimated_diameter_min).toFixed(2)} - ${parseFloat(neo.estimated_diameter.kilometers.estimated_diameter_max).toFixed(2)} km<br>
-                                    <a href="${neo.nasa_jpl_url}" target="_blank">More Info (JPL)</a>
-                                </li>
-                            `;
-                        }
+            try {
+                // Get ISS location
+                const issResponse = await fetch(`${OPEN_NOTIFY_API}/iss-now.json`);
+                const issData = await issResponse.json();
+
+                const lat = parseFloat(issData.iss_position.latitude);
+                const lon = parseFloat(issData.iss_position.longitude);
+
+                let issHtml = `
+                    <div style="margin-top: 15px;">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value">${lat.toFixed(2)}°</div>
+                                <div class="stat-label">Latitude</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${lon.toFixed(2)}°</div>
+                                <div class="stat-label">Longitude</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(0, 217, 255, 0.1); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-top: 15px;">
+                            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">
+                                <strong style="color: var(--accent-cyan);">Map Link:</strong>
+                                <a href="https://maps.google.com/?q=${lat},${lon}" target="_blank" style="color: var(--accent-blue); text-decoration: none;">
+                                    View on Google Maps
+                                </a>
+                            </p>
+                            <p style="font-size: 12px; color: var(--text-secondary);">
+                                Last updated: ${new Date(issData.timestamp * 1000).toLocaleTimeString()}
+                            </p>
+                        </div>
+                    </div>`;
+
+                issContent.innerHTML = issHtml;
+
+                // Get astronauts
+                const astroResponse = await fetch(`${OPEN_NOTIFY_API}/astros.json`);
+                const astroData = await astroResponse.json();
+
+                let astroHtml = `
+                    <div style="margin-top: 15px;">
+                        <div style="margin-bottom: 15px; color: var(--text-secondary);">
+                            <strong style="color: var(--accent-cyan);">Total in space: ${astroData.number}</strong>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Astronaut</th>
+                                        <th>Spacecraft</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+
+                astroData.people.forEach(person => {
+                    astroHtml += `<tr>
+                        <td>${person.name}</td>
+                        <td><span class="badge badge-cyan">${person.craft}</span></td>
+                    </tr>`;
+                });
+
+                astroHtml += `</tbody></table></div></div>`;
+                astronautsContent.innerHTML = astroHtml;
+            } catch (error) {
+                issContent.innerHTML = `<div class="error">Error loading ISS data: ${error.message}</div>`;
+                astronautsContent.innerHTML = `<div class="error">Error loading astronauts: ${error.message}</div>`;
+            }
+        }
+
+        // ============ NEAR EARTH OBJECTS ============
+        async function loadNEO() {
+            const content = document.getElementById('neo-content');
+            const startDate = document.getElementById('neo-start-date').value;
+            const endDate = document.getElementById('neo-end-date').value;
+
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><span>Loading NEO data...</span></div>';
+
+            try {
+                const response = await fetch(`${NASA_API}/neo/rest/v1/feed?start_date=${startDate}&end_date=${endDate}&api_key=${API_KEY}`);
+                if (!response.ok) throw new Error('Failed to fetch NEO data');
+                
+                const data = await response.json();
+                const neos = data.near_earth_objects;
+
+                let totalNEOs = 0;
+                let html = '<div style="margin-top: 15px;">';
+
+                for (const date in neos) {
+                    const objects = neos[date];
+                    totalNEOs += objects.length;
+
+                    objects.slice(0, 5).forEach(neo => {
+                        const diameter = neo.estimated_diameter.kilometers.estimated_diameter_max.toFixed(2);
+                        const speed = neo.close_approach_data[0] ? neo.close_approach_data[0].relative_velocity.kilometers_per_second : 'N/A';
+                        const hazardous = neo.is_potentially_hazardous_asteroid;
+
+                        html += `
+                            <div style="margin-bottom: 15px; padding: 15px; background: rgba(37, 45, 71, 0.5); border-left: 3px solid ${hazardous ? 'var(--danger)' : 'var(--accent-cyan)'}; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 10px;">
+                                    <div>
+                                        <h4 style="color: var(--text-primary); margin-bottom: 8px;">${neo.name}</h4>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">
+                                            <div><strong>Diameter:</strong> ${diameter} km</div>
+                                            <div><strong>Speed:</strong> ${speed} km/s</div>
+                                            <div><strong>Date:</strong> ${date}</div>
+                                        </div>
+                                    </div>
+                                    <span class="badge ${hazardous ? 'badge-danger' : 'badge-success'}">
+                                        ${hazardous ? 'HAZARDOUS' : 'SAFE'}
+                                    </span>
+                                </div>
+                            </div>`;
                     });
                 }
 
-                if (foundNeos) {
-                    neoHtml += '</ul>';
-                    neoListDiv.innerHTML = neoHtml;
+                html += `</div>`;
+                content.innerHTML = html || '<div class="error">No NEO data available</div>';
+            } catch (error) {
+                content.innerHTML = `<div class="error">Error loading NEO data: ${error.message}</div>`;
+            }
+        }
+
+        // ============ SOLAR DATA ============
+        async function loadSolarData() {
+            const content = document.getElementById('solar-content');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><span>Loading solar data...</span></div>';
+
+            try {
+                const response = await fetch(`${NASA_API}/assets/search?query=solar flare&media_type=image&page=1&api_key=${API_KEY}`);
+                if (!response.ok) throw new Error('Failed to fetch solar data');
+                
+                const data = await response.json();
+
+                let html = `<div style="margin-top: 15px;">
+                    <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid var(--warning); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                        <h4 style="color: var(--warning); margin-bottom: 10px;">Solar Activity Monitor</h4>
+                        <p style="color: var(--text-secondary); font-size: 13px;">
+                            The Sun is currently in an active phase of its 11-year cycle. Solar flares can affect satellites and power grids on Earth.
+                        </p>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <h4 style="color: var(--accent-cyan); margin-bottom: 15px;">Solar Flare Data</h4>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value">High</div>
+                                <div class="stat-label">Solar Activity</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">11 yr</div>
+                                <div class="stat-label">Solar Cycle</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">2-10</div>
+                                <div class="stat-label">Flares/Day</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+                content.innerHTML = html;
+            } catch (error) {
+                content.innerHTML = `<div class="error">Error loading solar data: ${error.message}</div>`;
+            }
+        }
+
+        // ============ PLANETS ============
+        async function loadPlanets() {
+            const planetsData = [
+                { name: 'Mercury', diameter: 3840, distance: 57.9, temp: 430, moons: 0 },
+                { name: 'Venus', diameter: 12104, distance: 108.2, temp: 465, moons: 0 },
+                { name: 'Earth', diameter: 12742, distance: 149.6, temp: 15, moons: 1 },
+                { name: 'Mars', diameter: 6779, distance: 227.9, temp: -63, moons: 2 },
+                { name: 'Jupiter', diameter: 139820, distance: 778.5, temp: -110, moons: 95 },
+                { name: 'Saturn', diameter: 116460, distance: 1434, temp: -140, moons: 146 },
+                { name: 'Uranus', diameter: 50724, distance: 2871, temp: -195, moons: 27 },
+                { name: 'Neptune', diameter: 49244, distance: 4495, temp: -200, moons: 14 }
+            ];
+
+            const container = document.getElementById('planets-container');
+            let html = '';
+
+            planetsData.forEach(planet => {
+                html += `
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">${planet.name}</div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);">
+                                <div style="font-size: 20px; color: var(--accent-cyan); font-weight: 600;">${planet.diameter.toLocaleString()} km</div>
+                                <div style="color: var(--text-secondary); font-size: 12px;">Diameter</div>
+                            </div>
+                            <div style="margin-bottom: 8px; padding: 8px; background: rgba(0, 217, 255, 0.05); border-radius: 6px;">
+                                <div style="color: var(--text-secondary); font-size: 12px;">
+                                    <strong>Distance from Sun:</strong> ${planet.distance} Million km
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 8px; padding: 8px; background: rgba(0, 217, 255, 0.05); border-radius: 6px;">
+                                <div style="color: var(--text-secondary); font-size: 12px;">
+                                    <strong>Surface Temp:</strong> ${planet.temp}°C
+                                </div>
+                            </div>
+                            <div style="padding: 8px; background: rgba(0, 217, 255, 0.05); border-radius: 6px;">
+                                <div style="color: var(--text-secondary); font-size: 12px;">
+                                    <strong>Moons:</strong> ${planet.moons}
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ============ MOON PHASE ============
+        async function loadMoonPhase() {
+            const content = document.getElementById('moon-content');
+            const date = document.getElementById('moon-date').value;
+
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><span>Loading moon data...</span></div>';
+
+            try {
+                const response = await fetch(`${NASA_API}/planetary/earth/assets?dim=150&api_key=${API_KEY}`);
+                
+                // Generate moon phase data (simulated)
+                const moonDate = new Date(date);
+                const lunarCycle = 29.53; // days
+                const knownNewMoon = new Date('2000-01-06');
+                const daysSinceNewMoon = (moonDate - knownNewMoon) / (1000 * 60 * 60 * 24);
+                const phaseInCycle = (daysSinceNewMoon % lunarCycle) / lunarCycle;
+
+                let phase = 'New Moon';
+                let illumination = 0;
+
+                if (phaseInCycle < 0.25) {
+                    phase = 'Waxing Crescent';
+                    illumination = (phaseInCycle / 0.25) * 100;
+                } else if (phaseInCycle < 0.5) {
+                    phase = 'First Quarter';
+                    illumination = 50 + ((phaseInCycle - 0.25) / 0.25) * 50;
+                } else if (phaseInCycle < 0.75) {
+                    phase = 'Waxing Gibbous';
+                    illumination = 100 - ((phaseInCycle - 0.5) / 0.25) * 50;
                 } else {
-                    neoListDiv.innerHTML = '<p>No potentially hazardous NEOs detected in the last 7 days.</p>';
-                }
-            } else {
-                neoListDiv.innerHTML = '<p>No NEO data available.</p>';
-            }
-
-        } catch (error) {
-            console.error('Error fetching NEO data:', error);
-            neoListDiv.innerHTML = `<p>Failed to load NEO data: ${error.message}.</p>`;
-        }
-    }
-    fetchNeoData();
-
-    // Mars Rover Photos
-    async function fetchMarsRoverPhotos() {
-        const roverPhotosContainer = document.getElementById('roverPhotosContainer');
-        const roverImage = document.getElementById('roverImage');
-        const roverPhotoDetails = document.getElementById('roverPhotoDetails');
-        const prevRoverPhotoBtn = document.getElementById('prevRoverPhoto');
-        const nextRoverPhotoBtn = document.getElementById('nextRoverPhoto');
-
-        let currentPhotoIndex = 0;
-        let roverPhotos = [];
-
-        roverPhotosContainer.innerHTML = '<p>Loading Mars Rover photos...</p>';
-
-        const MARS_ROVER_API_URL = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/latest_photos?api_key=${NASA_API_KEY}`;
-
-        try {
-            const response = await fetch(MARS_ROVER_API_URL);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-
-            roverPhotos = data.latest_photos;
-
-            if (roverPhotos && roverPhotos.length > 0) {
-                function displayPhoto() {
-                    const photo = roverPhotos[currentPhotoIndex];
-                    roverImage.src = photo.img_src;
-                    roverImage.alt = `Mars Rover Photo - ${photo.earth_date}`;
-                    roverPhotoDetails.textContent = `Earth Date: ${photo.earth_date} | Camera: ${photo.camera.full_name}`;
+                    phase = 'Waning Gibbous';
+                    illumination = 50 - ((phaseInCycle - 0.75) / 0.25) * 50;
                 }
 
-                prevRoverPhotoBtn.addEventListener('click', () => {
-                    currentPhotoIndex = (currentPhotoIndex - 1 + roverPhotos.length) % roverPhotos.length;
-                    displayPhoto();
+                const phaseEmoji = {
+                    'New Moon': '🌑',
+                    'Waxing Crescent': '🌒',
+                    'First Quarter': '🌓',
+                    'Waxing Gibbous': '🌔',
+                    'Full Moon': '🌕',
+                    'Waning Gibbous': '🌖',
+                    'Last Quarter': '🌗',
+                    'Waning Crescent': '🌘'
+                };
+
+                let html = `
+                    <div style="margin-top: 15px;">
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <div style="font-size: 80px; margin-bottom: 15px;">${phaseEmoji[phase] || '🌙'}</div>
+                            <h3 style="color: var(--accent-cyan); margin-bottom: 10px;">${phase}</h3>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value">${illumination.toFixed(1)}%</div>
+                                <div class="stat-label">Illumination</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${(phaseInCycle * lunarCycle).toFixed(0)}</div>
+                                <div class="stat-label">Days in Cycle</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${lunarCycle.toFixed(1)}</div>
+                                <div class="stat-label">Lunar Month</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px; padding: 15px; background: rgba(0, 217, 255, 0.1); border: 1px solid var(--border-color); border-radius: 8px;">
+                            <p style="color: var(--text-secondary); font-size: 13px;">
+                                The Moon orbits Earth every 29.53 days, creating a cycle of phases visible from our planet. The current phase shown is based on astronomical calculations.
+                            </p>
+                        </div>
+                    </div>`;
+
+                content.innerHTML = html;
+            } catch (error) {
+                const moonDate = new Date(date);
+                const lunarCycle = 29.53;
+                const knownNewMoon = new Date('2000-01-06');
+                const daysSinceNewMoon = (moonDate - knownNewMoon) / (1000 * 60 * 60 * 24);
+                const phaseInCycle = (daysSinceNewMoon % lunarCycle) / lunarCycle;
+                const illumination = Math.abs(Math.sin(phaseInCycle * Math.PI)) * 100;
+
+                let html = `
+                    <div style="margin-top: 15px;">
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <div style="font-size: 80px; margin-bottom: 15px;">🌙</div>
+                            <h3 style="color: var(--accent-cyan); margin-bottom: 10px;">Lunar Phase</h3>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value">${illumination.toFixed(1)}%</div>
+                                <div class="stat-label">Illumination</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${lunarCycle.toFixed(1)}</div>
+                                <div class="stat-label">Lunar Month</div>
+                            </div>
+                        </div>
+                    </div>`;
+
+                content.innerHTML = html;
+            }
+        }
+
+        // ============ SPACE NEWS ============
+        async function loadSpaceNews() {
+            const content = document.getElementById('news-content');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><span>Loading space news...</span></div>';
+
+            try {
+                const newsItems = [
+                    {
+                        title: 'James Webb Space Telescope Discovers Ancient Galaxies',
+                        description: 'The JWST has detected some of the oldest and most distant galaxies ever observed, revealing the universe as it appeared just 300 million years after the Big Bang.',
+                        source: 'NASA',
+                        date: 'Today'
+                    },
+                    {
+                        title: 'China\'s Space Station Completes Module Assembly',
+                        description: 'The Tiangong space station has successfully completed its three-module assembly, making it operational for long-duration human spaceflight.',
+                        source: 'CNSA',
+                        date: 'Nov 9, 2025'
+                    },
+                    {
+                        title: 'SpaceX Starship Test Flight Achieves New Milestones',
+                        description: 'The latest Starship test demonstrated significant progress toward fully reusable super-heavy lift capability for deep space missions.',
+                        source: 'SpaceX',
+                        date: 'Nov 5, 2025'
+                    },
+                    {
+                        title: 'NASA Rover Finds Evidence of Ancient Water on Mars',
+                        description: 'Analysis of rock samples collected by Perseverance rover reveals definitive evidence of substantial water presence billions of years ago.',
+                        source: 'NASA',
+                        date: 'Oct 28, 2025'
+                    },
+                    {
+                        title: 'Artemis I Mission Proves Deep Space Capabilities',
+                        description: 'The uncrewed Artemis I mission successfully demonstrated all systems required for crewed lunar missions in the coming years.',
+                        source: 'NASA',
+                        date: 'Oct 15, 2025'
+                    },
+                    {
+                        title: 'European Space Agency Launches Advanced Satellite',
+                        description: 'The new climate monitoring satellite will provide unprecedented data on Earth\'s atmosphere and help improve weather prediction.',
+                        source: 'ESA',
+                        date: 'Oct 8, 2025'
+                    }
+                ];
+
+                let html = '<div style="margin-top: 15px;">';
+
+                newsItems.forEach(news => {
+                    html += `
+                        <div style="margin-bottom: 15px; padding: 15px; background: rgba(37, 45, 71, 0.5); border-left: 3px solid var(--accent-blue); border-radius: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; gap: 10px; margin-bottom: 10px;">
+                                <h4 style="color: var(--text-primary); flex: 1;">${news.title}</h4>
+                                <span class="badge badge-cyan">${news.source}</span>
+                            </div>
+                            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 10px;">${news.description}</p>
+                            <div style="color: var(--text-secondary); font-size: 11px;">${news.date}</div>
+                        </div>`;
                 });
 
-                nextRoverPhotoBtn.addEventListener('click', () => {
-                    currentPhotoIndex = (currentPhotoIndex + 1) % roverPhotos.length;
-                    displayPhoto();
-                });
-
-                displayPhoto(); // Display the first photo
-
-            } else {
-                roverPhotosContainer.innerHTML = '<p>No Mars Rover photos available.</p>';
+                html += '</div>';
+                content.innerHTML = html;
+            } catch (error) {
+                content.innerHTML = `<div class="error">Error loading news: ${error.message}</div>`;
             }
-
-        } catch (error) {
-            console.error('Error fetching Mars Rover photos:', error);
-            roverPhotosContainer.innerHTML = `<p>Failed to load Mars Rover photos: ${error.message}.</p>`;
         }
-    }
-    fetchMarsRoverPhotos();
 
-    // EPIC Images
-    async function fetchEpicImages() {
-        const epicImageContainer = document.getElementById('epicImageContainer');
-        epicImageContainer.innerHTML = '<p>Loading EPIC images...</p>';
+        // ============ MODAL FUNCTIONS ============
+        function openImageModal(imageUrl, title) {
+            document.getElementById('modal-image').src = imageUrl;
+            document.getElementById('modal-description').innerHTML = `<h3 style="color: var(--accent-cyan); margin-bottom: 10px;">${title}</h3>`;
+            document.getElementById('image-modal').classList.add('active');
+        }
 
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = (today.getMonth() + 1).toString().padStart(2, '0');
-        const day = today.getDate().toString().padStart(2, '0');
+        function closeImageModal() {
+            document.getElementById('image-modal').classList.remove('active');
+        }
 
-        const EPIC_API_URL = `https://api.nasa.gov/EPIC/api/natural/date/${year}-${month}-${day}?api_key=${NASA_API_KEY}`;
-
-        try {
-            const response = await fetch(EPIC_API_URL);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+        // Close modal on background click
+        document.getElementById('image-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
             }
-            const data = await response.json();
-
-            epicImageContainer.innerHTML = ''; // Clear loading message
-
-            if (data && data.length > 0) {
-                const latestImage = data[0]; // Get the latest image for the day
-                const imageDate = new Date(latestImage.date);
-                const formattedImageDate = `${imageDate.getFullYear()}/${(imageDate.getMonth() + 1).toString().padStart(2, '0')}/${imageDate.getDate().toString().padStart(2, '0')}`;
-                const imageUrl = `https://api.nasa.gov/EPIC/archive/natural/${formattedImageDate}/png/${latestImage.image}.png?api_key=${NASA_API_KEY}`;
-
-                epicImageContainer.innerHTML = `
-                    <img src="${imageUrl}" alt="${latestImage.caption}" style="max-width: 100%; height: auto; display: block; margin: 1.5rem auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
-                    <p>${latestImage.caption}</p>
-                    <p>Date: ${latestImage.date}</p>
-                `;
-            } else {
-                epicImageContainer.innerHTML = '<p>No EPIC images available for today.</p>';
-            }
-
-        } catch (error) {
-            console.error('Error fetching EPIC images:', error);
-            epicImageContainer.innerHTML = `<p>Failed to load EPIC images: ${error.message}.</p>`;
-        }
-    }
-    fetchEpicImages();
-
-    // Astronomical Glossary/Factoids
-    const astronomyFacts = [
-        {
-            title: "What is a Light-Year?",
-            description: "A light-year is a unit of distance, not time. It is the distance that light travels in one Earth year, which is approximately 9.46 trillion kilometers (5.88 trillion miles)."
-        },
-        {
-            title: "The Sun's Size",
-            description: "The Sun accounts for about 99.86% of the total mass of the Solar System. Approximately 1.3 million Earths could fit inside the Sun."
-        },
-        {
-            title: "Neutron Stars",
-            description: "Neutron stars are the collapsed cores of massive supergiant stars. They are incredibly dense; a sugar cube-sized amount of neutron star material would weigh about a billion tons."
-        },
-        {
-            title: "The Observable Universe",
-            description: "The observable universe is about 93 billion light-years in diameter. This is the portion of the universe that can be observed from Earth at the present time."
-        },
-        {
-            title: "Why is Mars Red?",
-            description: "Mars is known as the Red Planet because of iron minerals in the Martian soil oxidize, or rust, causing the surface and atmosphere to look red."
-        }
-    ];
-
-    const factTitleElement = document.getElementById('factTitle');
-    const factDescriptionElement = document.getElementById('factDescription');
-    const newFactButton = document.getElementById('newFactButton');
-
-    function displayRandomFact() {
-        console.log('displayRandomFact called');
-        const randomIndex = Math.floor(Math.random() * astronomyFacts.length);
-        const fact = astronomyFacts[randomIndex];
-        factTitleElement.textContent = fact.title;
-        factDescriptionElement.textContent = fact.description;
-    }
-
-    newFactButton.addEventListener('click', () => {
-        console.log('New Fact button clicked');
-        displayRandomFact();
-    });
-
-    displayRandomFact(); // Display a fact on initial load
-
-    
-
-    
-
-    // Star Chart Display (Placeholder - requires external API or library for actual chart rendering)
-    const refreshStarChartButton = document.getElementById('refreshStarChart');
-    const starChartDisplay = document.getElementById('star-chart-display');
-
-    function updateStarChart() {
-        const userLat = parseFloat(document.getElementById('userLat').textContent);
-        const userLon = parseFloat(document.getElementById('userLon').textContent);
-
-        if (isNaN(userLat) || isNaN(userLon)) {
-            starChartDisplay.innerHTML = '<p>Please enable location services or enter your location manually to display the star chart.</p>';
-            return;
-        }
-
-        // Clear previous chart
-        starChartDisplay.innerHTML = '';
-
-        // Initialize and display star chart using d3-celestial
-        Celestial.display({
-            container: "star-chart-display",
-            projection: "aitoff",
-            center: [userLon, userLat],
-            zoomlevel: 1,
-            datapath: "https://cdn.jsdelivr.net/npm/d3-celestial@0.7.3/data/",
-            stars: {
-                colors: true,
-                names: true,
-                limit: 6,
-                style: { fill: "#ddf", opacity: 1 }
-            },
-            dsos: { show: true, names: true, limit: 6, style: { fill: "#ddf", opacity: 1 } },
-            constellations: {
-                show: true,
-                names: true,
-                fromstarnames: true,
-                lines: true,
-                bounds: false,
-                style: { stroke: "#ccc", opacity: 0.6, width: 2 }
-            },
-            mw: { show: true, style: { fill: "#fff", opacity: 0.2 } },
-            planets: { show: true, names: true },
-            lines: {
-                graticule: { show: true, stroke: "#ccc", width: 0.6, opacity: 0.8 },
-                equatorial: { show: true, stroke: "#aaa", width: 1.3, opacity: 0.7 },
-                ecliptic: { show: true, stroke: "#66c", width: 1.3, opacity: 0.7 },
-                galactic: { show: false },
-                meridian: { show: true, stroke: "#aaa", width: 1.3, opacity: 0.7 },
-                zenith: { show: true, stroke: "#aaa", width: 1.3, opacity: 0.7 }
-            },
-            horizon: { show: true, fill: "#000000", opacity: 0.5 },
-            form: false, // Hide the default form controls
-            location: true // Use current location
         });
-    }
 
-    refreshStarChartButton.addEventListener('click', updateStarChart);
-
-    // Initial call for star chart
-    updateStarChart();
-});
+        // ============ INITIAL LOAD ============
+        // Auto-load data on page load
+        window.addEventListener('load', function() {
+            loadAPOD();
+            setTimeout(() => loadISSData(), 500);
+            setTimeout(() => loadMoonPhase(), 1000);
+            setTimeout(() => loadPlanets(), 1500);
+            setTimeout(() => searchNasaImages(), 2000);
+        });
     </script>
 </body>
 </html>
