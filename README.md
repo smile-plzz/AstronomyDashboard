@@ -1,22 +1,23 @@
 # Astronomy Dashboard
 
-This is a single-page HTML application designed to provide astronomy enthusiasts with a lightweight, responsive, and offline-capable dashboard.
+This is a single-page HTML application designed to provide astronomy enthusiasts with a lightweight, responsive dashboard for NASA imagery and astronomy reference data.
 
 ## Features
 
-*   **Astronomy Picture of the Day (APOD)**: Displays the daily astronomy image, title, and description from NASA's APOD API.
-*   **International Space Station (ISS) Location**: Shows the real-time latitude and longitude of the ISS.
+*   **Astronomy Picture of the Day (APOD)**: Displays the daily astronomy image, title, description, copyright, API version, and HD image link when available.
+*   **International Space Station (ISS) Location**: Shows the real-time latitude, longitude, API status, measurement timestamp, and current crew list when the Open Notify API is available.
 *   **Moon Phase**: Calculates and displays the current moon phase.
-*   **User Location**: Detects user's geographical coordinates (with fallback for manual input).
-*   **Upcoming Celestial Events**: Dynamically fetches and displays notable celestial events (Solar Flares, Coronal Mass Ejections).
-*   **Near Earth Objects (NEOs)**: Displays information about potentially hazardous Near Earth Objects.
-*   **Mars Rover Photos Integration**: Added a new section and JavaScript functionality to fetch and display the latest photos from NASA's Mars Rovers (Curiosity), with a sliding feature for user interactivity (left/right arrow navigation and single image preview).
-*   **NASA Image and Video Library Search**: Allows users to search and view images and videos from NASA's extensive library.
-*   **Interactive Star Chart**: Displays an interactive star chart using `d3-celestial` based on user's location, showing stars, constellations, and other celestial objects.
-*   **Favorites**: Allows users to save their favorite APOD images to local storage and view them in a collapsible list.
-*   **Dark Mode**: Defaults to dark mode with the option to toggle to light mode, with the preference saved locally.
-*   **Offline Support**: Caches APOD and ISS data for offline viewing.
-*   **Social Sharing**: Enables sharing of APOD images via Web Share API or by copying the URL.
+*   **Near Earth Objects (NEOs)**: Displays hazardous status, diameter, velocity, miss distance, approach time, absolute magnitude, orbiting body, and JPL record links.
+*   **Mars Rover Photos Integration**: Fetches and displays photos from NASA's Mars Rover Photos API with camera filtering, mission stats, Earth dates, photo IDs, rover status, and modal previews.
+*   **NASA Media Library Search**: Allows users to search images, videos, and audio from NASA's public media library, including NASA IDs, descriptions, centers, dates, keywords, metadata links, and downloadable asset links.
+*   **Planet Reference Cards**: Displays static summary data for the planets.
+*   **Celestial Events**: Includes a filterable event calendar for meteor showers, Moon events, and planet highlights.
+*   **Observing Planner**: Estimates session quality from cloud cover, light pollution, and moonlight.
+*   **Target Suggestions**: Provides practical observing targets with recommended gear and timing.
+*   **Favorites**: Saves APOD entries locally in the browser for later viewing.
+*   **Theme Toggle**: Switches between dark and light visual themes and saves the preference locally.
+*   **Space News Section**: Displays curated static space-discovery headlines.
+*   **Dark Visual Theme**: Uses a night-friendly visual design by default.
 *   **Responsive UI**: Adapts to various screen sizes (mobile, tablet, desktop).
 
 ## Development Log
@@ -32,12 +33,18 @@ To run this application, simply open the `index.html` file in your web browser.
 This dashboard utilizes the following public APIs:
 
 *   **NASA Astronomy Picture of the Day (APOD) API**: For daily astronomy images.
-*   **Open-Notify ISS Location API**: For real-time International Space Station coordinates.
+*   **NASA Mars Rover Photos API**: For rover image galleries.
+*   **NASA Image and Video Library API**: For public image search.
+*   **NASA Near Earth Object Web Service**: For asteroid approach data.
+*   **Open Notify APIs**: For real-time International Space Station coordinates and crew data.
 
 ## Development Notes
 
 *   All HTML, CSS, and JavaScript are contained within a single `index.html` file for simplicity and portability.
 *   API keys are embedded directly in the `index.html` file. For production environments, it is highly recommended to manage API keys more securely (e.g., via backend services or environment variables).
+*   Dynamic API content is rendered with basic HTML escaping to reduce injection risk from third-party data.
+*   The app intentionally loads only the first tab's network data on startup. Other API-backed tabs load when selected.
+*   Favorites and theme preferences are stored in browser `localStorage`.
 
 ## Suggested Improvements and Future Enhancements
 
@@ -45,6 +52,8 @@ This dashboard utilizes the following public APIs:
 *   **Harden API Interactions**: Introduce a small proxy backend or serverless functions to secure API keys, add caching, and handle rate limiting gracefully.
 *   **Progressive Web App (PWA) Support**: Add a web app manifest and service worker with smarter caching strategies so the dashboard can be installed and used reliably offline.
 *   **Accessibility Enhancements**: Audit color contrast, provide ARIA labels for dynamic content, and ensure keyboard navigation works across all interactive components.
+*   **User Location and Star Chart**: Add geolocation, manual coordinates, and an interactive star chart using a dedicated astronomy visualization library.
+*   **Sharing**: Add Web Share API support for APOD and gallery images.
 *   **User Personalization**: Allow users to configure default data sources (e.g., favorite rover, preferred events) and persist preferences via local storage or synced storage.
 *   **Observation Planner**: Offer a planner that combines local weather forecasts, light pollution data, and upcoming events to help users schedule viewing sessions.
 *   **Community Sharing**: Enable authenticated users to share curated observing lists or favorite APOD collections with friends via generated links.
