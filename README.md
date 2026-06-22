@@ -1,64 +1,57 @@
-# Astronomy Dashboard
+# Celestial Explorer: Command Terminal
 
-This is a single-page HTML application designed to provide astronomy enthusiasts with a lightweight, responsive dashboard for NASA imagery and astronomy reference data.
+A high-fidelity space exploration dashboard powered by NASA Open APIs and Gemini Intelligence. Designed with a brutalist, command-center aesthetic, this application provides real-time telemetry from across the cosmos.
 
-## Features
+## 🌌 Core Modules
 
-*   **Astronomy Picture of the Day (APOD)**: Displays the daily astronomy image, title, description, copyright, API version, and HD image link when available.
-*   **International Space Station (ISS) Location**: Shows the real-time latitude, longitude, API status, measurement timestamp, and current crew list when the Open Notify API is available.
-*   **Moon Phase**: Calculates and displays the current moon phase.
-*   **Near Earth Objects (NEOs)**: Displays hazardous status, diameter, velocity, miss distance, approach time, absolute magnitude, orbiting body, and JPL record links.
-*   **Mars Rover Photos Integration**: Fetches and displays photos from NASA's Mars Rover Photos API with camera filtering, mission stats, Earth dates, photo IDs, rover status, and modal previews.
-*   **NASA Media Library Search**: Allows users to search images, videos, and audio from NASA's public media library, including NASA IDs, descriptions, centers, dates, keywords, metadata links, and downloadable asset links.
-*   **Planet Reference Cards**: Displays static summary data for the planets.
-*   **Celestial Events**: Includes a filterable event calendar for meteor showers, Moon events, and planet highlights.
-*   **Observing Planner**: Estimates session quality from cloud cover, light pollution, and moonlight.
-*   **Target Suggestions**: Provides practical observing targets with recommended gear and timing.
-*   **Favorites**: Saves APOD entries locally in the browser for later viewing.
-*   **Theme Toggle**: Switches between dark and light visual themes and saves the preference locally.
-*   **Space News Section**: Displays curated static space-discovery headlines.
-*   **Dark Visual Theme**: Uses a night-friendly visual design by default.
-*   **Responsive UI**: Adapts to various screen sizes (mobile, tablet, desktop).
+### 1. Command Briefing
+- **Real-time News Feed**: Aggregated space exploration updates.
+- **Secure Link Status**: Displays current transmission health and archive depth.
 
-## Development Log
+### 2. Vision Registry (APOD)
+- **Deep Scan Analysis**: Uses Gemini AI to audit and explain today's Astronomy Picture of the Day.
+- **High-Definition Capture**: HD media acquisition from NASA's daily vision logs.
 
-For a detailed log of development progress, see [development_log.md](development_log.md).
+### 3. Observatory Terminal
+- **Lunar Analysis**: Real-time moon phase calculation and illumination percentage.
+- **Celestial Calendar**: Upcoming meteor showers, eclipses, and spacecraft missions.
 
-## How to Use
+### 4. Mars Expedition (Rover Logs)
+- **Rover Selection**: Access Curiosity, Opportunity, and Spirit's image archives.
+- **Optical Subsystems**: Filter by specific camera modules (MAST, FHAZ, NAVCAM).
+- **Temporal Markers**: Query specific Martian Sols.
 
-To run this application, simply open the `index.html` file in your web browser.
+### 5. Orbital Ops (ISS Tracker)
+- **Live Signal**: Real-time GPS coordinates of the International Space Station.
+- **Active Registry**: Live count and bio-registry of crew currently in orbit.
 
-## API Usage
+### 6. Proximity Audit (NEOs)
+- **Impact Sensors**: Tracks Near-Earth Objects (asteroids) for the current temporal cycle.
+- **Hazardous Alerts**: Highlights objects identified as potentially hazardous.
 
-This dashboard utilizes the following public APIs:
+### 7. Galactic Archives (NASA Search)
+- **Multi-Media Query**: Search NASA's comprehensive image and video library.
+- **Asset Metadata**: View detailed acquisition context and source nodes.
 
-*   **NASA Astronomy Picture of the Day (APOD) API**: For daily astronomy images.
-*   **NASA Mars Rover Photos API**: For rover image galleries.
-*   **NASA Image and Video Library API**: For public image search.
-*   **NASA Near Earth Object Web Service**: For asteroid approach data.
-*   **Open Notify APIs**: For real-time International Space Station coordinates and crew data.
+## 🛠 Technical Architecture
 
-## Development Notes
+- **Frontend**: React 18 with Vite
+- **Styling**: Tailwind CSS (Cosmic Dark Theme)
+- **Animation**: Motion (formerly Framer Motion)
+- **Data Layer**: NASA Open APIs (APOD, Mars Rover, ISS, NEOs)
+- **Intelligence**: Google Gemini (Deep-layer visual audit)
+- **Icons**: Lucide React
 
-*   All HTML, CSS, and JavaScript are contained within a single `index.html` file for simplicity and portability.
-*   API keys are embedded directly in the `index.html` file. For production environments, it is highly recommended to manage API keys more securely (e.g., via backend services or environment variables).
-*   Dynamic API content is rendered with basic HTML escaping to reduce injection risk from third-party data.
-*   The app intentionally loads only the first tab's network data on startup. Other API-backed tabs load when selected.
-*   Favorites and theme preferences are stored in browser `localStorage`.
+## 🚀 Environment Configuration
 
-## Suggested Improvements and Future Enhancements
+To operate at full capacity, provide the following environment variables:
 
-*   **Modularize the Codebase**: Break the monolithic `index.html` file into dedicated HTML, CSS, and JavaScript bundles or migrate to a lightweight build tool (e.g., Vite) for better maintainability and caching.
-*   **Harden API Interactions**: Introduce a small proxy backend or serverless functions to secure API keys, add caching, and handle rate limiting gracefully.
-*   **Progressive Web App (PWA) Support**: Add a web app manifest and service worker with smarter caching strategies so the dashboard can be installed and used reliably offline.
-*   **Accessibility Enhancements**: Audit color contrast, provide ARIA labels for dynamic content, and ensure keyboard navigation works across all interactive components.
-*   **User Location and Star Chart**: Add geolocation, manual coordinates, and an interactive star chart using a dedicated astronomy visualization library.
-*   **Sharing**: Add Web Share API support for APOD and gallery images.
-*   **User Personalization**: Allow users to configure default data sources (e.g., favorite rover, preferred events) and persist preferences via local storage or synced storage.
-*   **Observation Planner**: Offer a planner that combines local weather forecasts, light pollution data, and upcoming events to help users schedule viewing sessions.
-*   **Community Sharing**: Enable authenticated users to share curated observing lists or favorite APOD collections with friends via generated links.
-*   **Educational Mode**: Add contextual tooltips, glossary entries, and guided tours to help newcomers understand astronomical terms and visualizations.
+```env
+NASA_API_KEY=YOUR_NASA_KEY
+GEMINI_API_KEY=YOUR_GEMINI_KEY
+```
 
-## Contributing
+*Note: Default demographic mode is enabled if API keys are missing.*
 
-Feel free to fork this repository and contribute to its development.
+---
+**© 2026 CELESTIAL SYSTEMS // ALL SYSTEMS NOMINAL**

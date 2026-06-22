@@ -1,0 +1,6 @@
+{
+  "name": "Celestial Explorer",
+  "description": "A high-fidelity space exploration dashboard featuring real-time NASA data and an AI-powered celestial advisor.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
